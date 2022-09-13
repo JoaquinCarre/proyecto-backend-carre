@@ -39,7 +39,7 @@ class Contenedor {
 }
 
 const arrayProductos = readFile ()
-const productos = new Contenedor (arrayProductos)
+const productos = new Contenedor ()
 
 function randomNumber () {
     const numberId = Math.floor(Math.random() * (3 - 1) + 1)
