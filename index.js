@@ -38,7 +38,6 @@ class Contenedor {
     }
 }
 
-const arrayProductos = readFile ()
 const productos = new Contenedor ()
 
 function randomNumber () {
