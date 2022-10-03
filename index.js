@@ -12,9 +12,9 @@ const server = app.listen (PORT, ()=>{
 server.on ("error", error => console.log (`Error en servidor ${error}`))
 
 async function readFile () {
-    try {const readFile = await fs.promises.readFile('./productos.txt')
-        const readFileJSON = await JSON.parse(readFile)
-        return await readFileJSON}
+    try {const readFile1 = await fs.promises.readFile('./productos.txt', "utf-8")
+        const readFileJSON = await JSON.parse(readFile1)
+        return readFileJSON}
     catch (err) {
         console.log ('error de lectura: ', err)
     }
@@ -41,7 +41,7 @@ class Contenedor {
 const productos = new Contenedor ()
 
 function randomNumber () {
-    const numberId = Math.floor(Math.random() * (3 - 1) + 1)
+    const numberId = Math.floor(Math.random() * (4 - 1) + 1)
     return numberId
 }
 
@@ -49,11 +49,11 @@ app.get ('/', (req,res)=> {
     res.send('<ul><li><a href="/productos">Productos</a></li><li><a href="/productoRandom">Producto Random</a></li></ul>')
 })
 
-app.get ('/productos', (req,res)=> {
-    res.json(productos.getAll())
+app.get ('/productos', async (req,res)=> {
+    res.json(await productos.getAll())
 })
 
 app.get ('/productoRandom', async (req,res)=> {
     const idNumber = randomNumber ()
-    res.json(productos.getByRandomId(idNumber))
+    res.json(await productos.getByRandomId(idNumber))
 })
