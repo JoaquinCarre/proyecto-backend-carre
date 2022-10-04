@@ -1,8 +1,12 @@
 const express = require('express')
 const routers = require('./routers')
+const path = require('path')
 
 const app = express()
 
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+app.use('/', express.static(path.join(__dirname, '/public')))
 app.use('/api', routers) //indice nominal
 
 const server = app.listen(process.env.PORT, () => {

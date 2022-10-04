@@ -1,0 +1,20 @@
+[
+    {
+        "title": "Iphone X-18",
+        "price": 339.40,
+        "thumbnail": "https://iphone.net",
+        "id": 1
+    },
+    {
+        "title": "Procesador Intel i6 1ºGen",
+        "price": 120,
+        "thumbnail": "https://intel.com",
+        "id": 2
+    },
+    {
+        "title": "Teclado Gamer XYZ Pro",
+        "price": 10,
+        "thumbnail": "https://tutecladoconluces.com.ar",
+        "id": 3
+    }
+]

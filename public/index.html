@@ -8,21 +8,22 @@
 </head>
 <body>
     <h1>Agregar un producto</h1>
-    <form>
+    <form id="form_upload_product" action="/api/productos" method="post">
         <label for="name_product">Nombre Producto</label>
-        <input type="text" name="productName" id="name_product" value="asd">
+        <input type="text" name="title" id="name_product">
         <br />
         <br />
         <label for="price_product">Precio Producto</label>
-        <input type="text" name="productPrice" id="price_product">
+        <input type="text" name="price" id="price_product">
         <br />
         <br />
         <label for="url_product">URL Imagen Producto</label>
-        <input type="text" name="productURL" id="url_product">
+        <input type="text" name="thumbnail" id="url_product">
         <br />
         <br />
         <button type="reset">Resetear</button>
         <button type="submit">Enviar</button>
     </form>
+    <script src="../routers/productos.js"></script>
 </body>
 </html>

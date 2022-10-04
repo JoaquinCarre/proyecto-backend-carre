@@ -1,50 +1,47 @@
 const { Router } = require('express')
+const fs = require('fs')
 
 const router = Router()
 
-const productos = [
-    {
-        title: 'Iphone X-18',
-        price: 339.40,
-        thumbnail: 'https://iphone.net',
-        id: 1
-    },
-    {
-        title: 'Procesador Intel i6 1ºGen',
-        price: 120,
-        thumbnail: 'https://intel.com',
-        id: 2
-    },
-    {
-        title: 'Teclado Gamer XYZ Pro',
-        price: 10,
-        thumbnail: 'https://tutecladoconluces.com.ar',
-        id: 3
-    }
-]
+let productos
 
-router.get('/', (req, res) => {
-    res.status(200).json(productos)
+async function readFile () {
+    try {const readFile = await fs.promises.readFile('../server/productos.txt', "utf-8")
+        const readFileJSON = await JSON.parse(readFile)
+        return await readFileJSON}
+    catch (err) {
+        console.log ('error de lectura: ', err)
+    }
+}
+
+router.get('/', async (req, res) => {
+    if (!productos) {
+        productos = await readFile()
+    }
+    res.status(200).json(await productos)
 })
 
-router.post('/', (req, res) => {
-    const product = {
-        title: "Secarropas TurboVueltas",
-        price: 1150,
-        thumbnail: "http://alavueltadetulavanderia.com.ar"
+router.post('/', async (req, res) => {
+    if (!productos) {
+        productos = await readFile()
     }
+    //agregar valor input como en clase 11
+    const product = req.body
     const { title, price, thumbnail } = product
     if (title && price && thumbnail) {
         const id = productos.length + 1
         const newProduct = { ...product, id }
         productos.push(newProduct)
-        res.json(productos)
+        res.json(await productos)
     } else {
         res.status(500).json('No es posible subir el producto, faltan datos')
     }
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
+    if (!productos) {
+        productos = await readFile()
+    }
     const { id } = req.params
     if (productos.length >= id) {
         const oneProduct = productos.filter((el) => el.id == id)
@@ -54,7 +51,10 @@ router.get('/:id', (req, res) => {
     }
 })
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
+    if (!productos) {
+        productos = await readFile()
+    }
     const { id } = req.params
     const changeDetail = { title: "Nuevo Producto XTZ", price: 1150, thumbnail: "https//nuevoproducto.com" }
     const { title, price, thumbnail } = changeDetail
@@ -72,7 +72,10 @@ router.put('/:id', (req, res) => {
     }
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
+    if (!productos) {
+        productos = await readFile()
+    }
     const { id } = req.params
     productos.forEach((product, i) => {
         if (product.id == id) {
