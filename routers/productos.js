@@ -5,12 +5,14 @@ const router = Router()
 
 let productos
 
-async function readFile () {
-    try {const readFile = await fs.promises.readFile('../server/productos.txt', "utf-8")
+async function readFile() {
+    try {
+        const readFile = await fs.promises.readFile('../server/productos.txt', "utf-8")
         const readFileJSON = await JSON.parse(readFile)
-        return await readFileJSON}
+        return await readFileJSON
+    }
     catch (err) {
-        console.log ('error de lectura: ', err)
+        console.log('error de lectura: ', err)
     }
 }
 
@@ -18,7 +20,15 @@ router.get('/', async (req, res) => {
     if (!productos) {
         productos = await readFile()
     }
-    res.status(200).json(await productos)
+    try {
+        const data = {
+            productos,
+            isEmpty: !productos.length
+        };
+        res.render('index', data);
+    } catch (error) {
+        next(error);
+    }
 })
 
 router.post('/', async (req, res) => {
@@ -79,11 +89,11 @@ router.delete('/:id', async (req, res) => {
     const { id } = req.params
     productos.forEach((product, i) => {
         if (product.id == id) {
-            productos.splice (i, 1) 
-        } 
+            productos.splice(i, 1)
+        }
     });
     res.json(productos)
-    
+
 
 })
 
