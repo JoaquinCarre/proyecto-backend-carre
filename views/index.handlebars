@@ -1,13 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ejercicio 5</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-</head>
-<body>
+<h1>Agregar un producto</h1>
+<form id="form_upload_product" action="/" method="post">
+    <label for="name_product">Nombre Producto</label>
+    <input type="text" name="title" id="name_product">
+    <br />
+    <br />
+    <label for="price_product">Precio Producto</label>
+    <input type="text" name="price" id="price_product">
+    <br />
+    <br />
+    <label for="url_product">URL Imagen Producto</label>
+    <input type="text" name="thumbnail" id="url_product">
+    <br />
+    <br />
+    <button type="reset" class="btn btn-danger">Resetear</button>
+    <button type="submit" class="btn btn-success">Agregar</button>
+</form>
+<button type="button" class="btn btn-warning"><a href="/api/productos" class="text-decoration-none text-light">Ver
+        productos añadidos</a></button>
+<div>
     <h1>Productos</h1>
     <table class="table" id="index">
         <tr>
@@ -30,6 +40,19 @@
         </tr>
         {{/each}}
     </table>
-    <button type="button" class="btn btn-success"><a href="/" class="text-decoration-none text-light">Agregar productos</a></button>
-</body>
-</html>
+    <button type="button" class="btn btn-success"><a href="/" class="text-decoration-none text-light">Agregar
+            productos</a></button>
+</div>
+<div class="m-3">
+    <h2>Chat</h2>
+    <div class="border border-primary">
+        <ul id="messages" class="list-group"></ul>
+    </div>
+    <form id="form" action="" class="input-group">
+        <input class="form-control" id="input" autocomplete="off" aria-describedby="button-addon1" />
+        <button class="btn btn-light btn-outline-dark" type="submit" id="button-addon1">Enviar</button>
+    </form>
+</div>
+<script src="../routers/productos.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/index.js"></script>
