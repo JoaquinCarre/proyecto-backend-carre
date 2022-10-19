@@ -1,5 +1,5 @@
 <h1>Agregar un producto</h1>
-<form id="form_upload_product" action="/" method="post">
+<form id="form_upload_product" onSubmit="newProduct(); return false" method="post">
     <label for="name_product">Nombre Producto</label>
     <input type="text" name="title" id="name_product">
     <br />
@@ -49,10 +49,14 @@
         <ul id="messages" class="list-group"></ul>
     </div>
     <form id="form" action="" class="input-group">
-        <input class="form-control" id="input" autocomplete="off" aria-describedby="button-addon1" />
+        <div class="input-group">
+            <input type="email" name="email" id="email_input" placeholder="email@email.com" class="form-control" required />
+        </div>
+        <div class="input-group">
+        <input class="form-control" id="msg_input" autocomplete="off" aria-describedby="button-addon1" placeholder="mensaje" />
         <button class="btn btn-light btn-outline-dark" type="submit" id="button-addon1">Enviar</button>
+        </div>
     </form>
 </div>
-<script src="../routers/productos.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/index.js"></script>
