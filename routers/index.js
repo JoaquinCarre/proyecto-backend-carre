@@ -22,7 +22,6 @@ router.get('/', async (req, res) => {
     }
     try {
         const data = {
-            productos,
             isEmpty: !productos.length
         };
         res.render('index', data);
@@ -35,7 +34,6 @@ router.post('/', async (req, res) => {
     if (!productos) {
         productos = await readFile()
     }
-    //agregar valor input como en clase 11
     const product = req.body
     const { title, price, thumbnail } = product
     if (title && price && thumbnail) {
