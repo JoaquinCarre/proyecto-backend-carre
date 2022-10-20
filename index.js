@@ -7,6 +7,12 @@ const http = require("http");
 const { Server } = require("socket.io");
 /* const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args)); */
 
+import {
+  createTable,
+  insertMessages,
+  getMessages,
+} from '../db/messages.js'
+
 const app = express();
 
 const server = http.createServer(app);
@@ -68,6 +74,12 @@ const messages = [
     message: "Bienvenidos al Chat público"
   },
 ];
+
+try {
+  await createTable(messages)
+} catch (error) {
+  console.error(error.message)
+}
 
 function setEvents() {
   io.on("connection", (socket) => {
