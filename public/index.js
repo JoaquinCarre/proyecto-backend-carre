@@ -58,7 +58,7 @@ const formChat = document.getElementById("form");
 const emailUser = document.getElementById("email_input");
 const input = document.getElementById("msg_input");
 
-const date = new Date();
+let date = new Date();
 
 let messages = [];
 
@@ -71,10 +71,11 @@ function showMessage(data) {
 }
 
 formChat.addEventListener("submit", function (e) {
+  date = new Date();
   e.preventDefault()
   const data = {
     email: emailUser.value,
-    date: new Date(),
+    date: date,
     message: input.value,
   };
   socket.emit("chat message", data);
