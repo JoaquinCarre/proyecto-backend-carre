@@ -1,10 +1,12 @@
-const fs = require('fs')
 const { Router } = require('express')
+const Contenedor = require('../contenedorClass')
+
+const products = new Contenedor('./dataBase/products.json');
+
 const router = Router()
 
 router.get('/', async (req, res) => {
-    const products = await fs.promises.readFile ('./public/product.json', 'utf-8')
-    const productsJSON = await JSON.parse (products)
+    const productsJSON = await products.getAll();
     try {
         const data = {
             productsJSON,
@@ -17,7 +19,5 @@ router.get('/', async (req, res) => {
     }
     
 })
-
-
 
 module.exports = router

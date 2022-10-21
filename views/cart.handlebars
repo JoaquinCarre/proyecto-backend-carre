@@ -1,0 +1,24 @@
+<div>
+    <h1>Carrito de Compras</h1>
+    <div id="tableContainer">
+        <table id="tableIndex" border="2" align="center">
+            <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Imagen</th>
+            </tr>
+            {{#if isEmpty}}
+            <tr>
+                <td colspan="3">No hay productos seleccionados</td>
+            </tr>
+            {{/if}}
+            {{#each productos}}
+            <tr>
+                <td>{{title}}</td>
+                <td>{{price}}</td>
+                <td>{{thumbnail}}</td>
+            </tr>
+            {{/each}}
+        </table>
+    </div>
+</div>
