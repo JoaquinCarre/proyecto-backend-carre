@@ -1,0 +1,36 @@
+<h1>Productos</h1>
+<div id="index">
+
+    {{#if isEmpty}}
+
+    <h3>No hay productos subidos</h3>
+
+    {{/if}}
+    {{!-- AGREGAR if isAdmin PARA PONER UNA U OTRA COSA SI ES O NO EL ADMIN QUIEN INGRESA --}}
+
+    {{#if isAdmin}}
+    {{#each productsJSON}}
+    <div><h2>¡Hola Admin!</h2></div>
+    <div class="card card{{id}}">
+        <span><img src={{thumbnail}} alt="imagen" width="50px"></span>
+        <h3>{{title}}</h3>
+        <p><strong>Precio:</strong> US${{price}}</p>
+        <button>Quitar Producto</button>
+    </div>
+    {{/each}}
+    <div>
+        <button>Agregar Producto</button>
+        <div id="productForm"></div> //agregar formulario al apretar boton para completar y subir nuevo producto
+    </div>
+    {{else}}
+    {{#each productsJSON}}
+    <div class="card card{{id}}">
+        <span><img src={{thumbnail}} alt="imagen" width="50px"></span>
+        <h3>{{title}}</h3>
+        <p><strong>Precio:</strong> US${{price}}</p>
+        <button>Agregar al Carrito</button>
+    </div>
+    {{/each}}
+    {{/if}}
+
+</div>
