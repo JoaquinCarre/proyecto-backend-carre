@@ -1,15 +1,16 @@
-const fs=require('fs');
+const fs = require('fs');
 
-class Contenedor{
-    constructor(fileJSON){
+class Contenedor {
+    constructor(fileJSON) {
         this.fileJSON = fileJSON;
     }
+
     async getAll() {
         try {
-            const products = await fs.promises.readFile (this.fileJSON, 'utf-8')
-            return await JSON.parse (products)
+            const products = await fs.promises.readFile(this.fileJSON, 'utf-8')
+            return await JSON.parse(products)
         } catch (error) {
-            console.log('No es posible obtener los productos de la base de datos',error);
+            console.log('No es posible obtener los productos de la base de datos', error);
         }
     }
 
@@ -33,7 +34,7 @@ class Contenedor{
                 const date = new Date();
                 const newProduct = { ...product, code, id, timestamp: date }
                 await products.push(newProduct)
-                await fs.promises.writeFile(this.fileJSON,JSON.stringify(products))
+                await fs.promises.writeFile(this.fileJSON, JSON.stringify(products))
                 const productsTemplate = await products
                 const data = {
                     productsTemplate,
@@ -46,6 +47,42 @@ class Contenedor{
                 const data = {
                     isEmpty: true,
                     message: "No es posible subir el producto, faltan datos",
+                    status: 500
+                }
+                return data
+            }
+        } catch (error) {
+            console.log('No es posible guardar el articulo', error);
+        }
+    }
+
+    async updateProduct(id, product) {
+        try {
+            const products = await this.getAll();
+            const { title, description, price, thumbnail, stock } = product
+            if (title && description && price && thumbnail && stock) {
+                await products.forEach((prod) => {
+                    if (prod.id == id) {
+                        prod.title = title
+                        prod.description = description
+                        prod.price = price
+                        prod.thumbnail = thumbnail
+                        prod.stock = stock
+                    }
+                });
+                await fs.promises.writeFile(this.fileJSON, JSON.stringify(products))
+                const productsTemplate = await products
+                const data = {
+                    productsTemplate,
+                    isEmpty: false,
+                    isAdmin: true,
+                    status: 200
+                }
+                return data
+            } else {
+                const data = {
+                    isEmpty: true,
+                    message: "Hay campos incompletos",
                     status: 500
                 }
                 return data
