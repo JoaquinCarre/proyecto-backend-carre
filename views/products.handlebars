@@ -3,7 +3,7 @@
 
     {{#if isEmpty}}
 
-    <h3>No hay productos subidos</h3>
+    <h3>{{message}}</h3>
     
     {{/if}}
 
@@ -13,7 +13,7 @@
         <h2>¡Hola Admin!</h2>
     </div>
     
-        {{#each productsJSON}}
+        {{#each productsTemplate}}
         
         <div class="card card{{id}}">
             <span><img src={{thumbnail}} alt="imagen" width="50px"></span>
@@ -29,7 +29,7 @@
     
     {{else}}
     
-        {{#each productsJSON}}
+        {{#each productsTemplate}}
     
         <div class="card card{{id}}">
             <span><img src={{thumbnail}} alt="imagen" width="50px"></span>
