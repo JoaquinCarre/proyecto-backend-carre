@@ -88,7 +88,39 @@ class Contenedor {
                 return data
             }
         } catch (error) {
-            console.log('No es posible guardar el articulo', error);
+            console.log('No es posible actualizar el articulo', error);
+        }
+    }
+
+    async deleteProduct (id) {
+        try {
+            const products = await this.getAll();
+            const existProduct = await this.getByID(id)
+            if (!existProduct.length) {
+                const data = {
+                    isEmpty: true,
+                    message: "No existe el producto seleccionado",
+                    status: 500
+                }
+                return data
+            } else {
+                await products.forEach((prod, i) => {
+                    if (prod.id == id) {
+                        products.splice(i, 1)
+                    }
+                });
+                await fs.promises.writeFile(this.fileJSON, JSON.stringify(products))
+                const productsTemplate = await products
+                const data = {
+                    productsTemplate,
+                    isEmpty: false,
+                    isAdmin: true,
+                    status: 200
+                }
+                return data
+            }
+        } catch (error) {
+            console.log('No es posible borrar el articulo', error);
         }
     }
 }

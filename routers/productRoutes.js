@@ -68,4 +68,14 @@ router.put('/:id', async (req, res) => {
     }
 })
 
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params
+    try {
+        const data = await products.deleteProduct(id)
+        res.status(data.status).render('products', data)
+    } catch (error) {
+        next(error)
+    }
+})
+
 module.exports = router
