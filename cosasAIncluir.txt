@@ -1,0 +1,4 @@
+Incluir botones de borrar y actualizar productos
+Agregar un index.js u otro nombre a carpeta /public que linkee con script al mismo y en el cual por getElByID al clickear en estos botones de agregar o actualizar producto inserten un formulario para tal caso
+En el caso de actualizar que se agregue un formulario con template donde el value del input sea el valor de la propiedad a cambiar (no placeholder) para que el admin solo deba cambiar aquella propiedad que busca y no tenga que estar completando los inputs
+El agregado del producto que tenga method POST y Action /api/productos

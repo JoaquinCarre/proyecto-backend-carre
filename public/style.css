@@ -24,4 +24,7 @@
     display: inline-block;
 }
 
+#addProductForm {
+    background-color: cadetblue;
+}
 /* CARRITO DE COMPRAS */
