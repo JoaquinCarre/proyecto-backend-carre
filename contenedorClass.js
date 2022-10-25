@@ -203,7 +203,6 @@ class Contenedor {
 
     async deleteProductByID(id, idProduct) {
         try {
-            console.log(idProduct)
             const cart = await this.getAll();
             const cartID = await cart.find(cartFind => cartFind.id == id);
             if (!cartID) {
@@ -216,8 +215,6 @@ class Contenedor {
             } else {
                 const cartIndex = await cart.indexOf(cartID);
                 const productID = await cart[cartIndex].products.find(productFind => productFind.id == idProduct)
-                console.log(productID)
-                console.log(cart[cartIndex].products);
                 if (!productID) {
                     const data = {
                         isEmpty: true,
@@ -227,12 +224,10 @@ class Contenedor {
                     return data;
                 } else {
                     const productIndex = await cart[cartIndex].products.indexOf(productID);
-                    console.log(productIndex);
                     await cart[cartIndex].products.splice(productIndex, 1);
-                    console.log(cart[cartIndex].products);
-                    await fs.promises.writeFile(this.fileName, JSON.stringify(cart));
+                    await fs.promises.writeFile(this.fileJSON, JSON.stringify(cart));
                     const cartTemplate = await cart[cartIndex].products;
-                    console.log(cartTemplate)
+
                     const data = {
                         cartTemplate,
                         isEmpty: !cartTemplate.length,
