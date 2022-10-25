@@ -6,9 +6,10 @@ const cart = new Contenedor('./dataBase/cart.json');
 
 const router = Router()
 
+//Cambiar valor booleano para habilitar o deshabilitar acceso como Admin
 const Admin = false
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     const productsJSON = await products.getAll();
     const productsTemplate = productsJSON
     const cartJSON = await cart.getAll();
@@ -32,7 +33,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
     const { id } = req.params
     const oneProduct = await products.getByID(id);
     try {
@@ -56,7 +57,7 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
     const product = req.body
     try {
         const data = await products.addProduct(product)
@@ -66,7 +67,7 @@ router.post('/', async (req, res) => {
     }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, next) => {
     const { id } = req.params
     const product = req.body
     try {
@@ -77,7 +78,7 @@ router.put('/:id', async (req, res) => {
     }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
     const { id } = req.params
     try {
         const data = await products.deleteProduct(id)

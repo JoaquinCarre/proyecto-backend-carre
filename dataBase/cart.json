@@ -1,1 +1,23 @@
-[{"id":1,"timestamp":"2022-10-25T02:40:25.398Z","products":[{"title":"Procesador Intel i6 1ºGen","description":"El procesador más económico","price":120,"thumbnail":"https://cdn4.iconfinder.com/data/icons/computer-and-technologies-1/800/Microprocessor-512.png","stock":10,"id":2,"code":".66gg1","timestamp":"2022-09-22T03:01:25.315Z"}]},{"id":2,"timestamp":"2022-10-25T02:41:25.280Z","products":[]}]
+[
+    {
+        "id": 1,
+        "timestamp": "2022-10-25T02:40:25.398Z",
+        "products": [
+            {
+                "title": "Procesador Intel i6 1ºGen",
+                "description": "El procesador más económico",
+                "price": 120,
+                "thumbnail": "https://cdn4.iconfinder.com/data/icons/computer-and-technologies-1/800/Microprocessor-512.png",
+                "stock": 10,
+                "id": 2,
+                "code": ".66gg1",
+                "timestamp": "2022-09-22T03:01:25.315Z"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "timestamp": "2022-10-25T02:41:25.280Z",
+        "products": []
+    }
+]

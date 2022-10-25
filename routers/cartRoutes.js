@@ -6,7 +6,7 @@ const products = new Contenedor('./dataBase/products.json');
 
 const router = Router()
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
     const cartID = await cart.createCart()
     try {
         const data = {
@@ -20,13 +20,13 @@ router.post('/', async (req, res) => {
 
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
     const { id } = req.params;
     const data = await cart.deleteCart(id)
     res.status(data.status).render('cart', data)
 })
 
-router.get('/:id/productos', async (req, res) => {
+router.get('/:id/productos', async (req, res, next) => {
     try {
         const { id } = req.params
         const cartByID = await cart.getByID(id);
@@ -50,7 +50,7 @@ router.get('/:id/productos', async (req, res) => {
     }
 })
 
-router.post('/:id/productos', async (req, res) => {
+router.post('/:id/productos', async (req, res, next) => {
     try {
         const idProduct = req.body.id;
         const product = await products.getByID(idProduct)
@@ -62,7 +62,7 @@ router.post('/:id/productos', async (req, res) => {
     }
 })
 
-router.delete('/:id/productos/:id_prod', async (req, res) => {
+router.delete('/:id/productos/:id_prod', async (req, res, next) => {
     try {
         const idProduct = req.params.id_prod;
         const { id } = req.params;
