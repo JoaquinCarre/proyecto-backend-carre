@@ -2,16 +2,25 @@ const { Router } = require('express')
 const Contenedor = require('../contenedorClass')
 
 const products = new Contenedor('./dataBase/products.json');
+const cart = new Contenedor('./dataBase/cart.json');
 
 const router = Router()
 
-const Admin = true
+const Admin = false
 
 router.get('/', async (req, res) => {
     const productsJSON = await products.getAll();
     const productsTemplate = productsJSON
+    const cartJSON = await cart.getAll();
+    let isCartJSON;
+    if (!cartJSON.length) {
+        isCartJSON = false
+    } else {
+        isCartJSON = true
+    }
     try {
         const data = {
+            isCart: isCartJSON,
             productsTemplate,
             isEmpty: !productsJSON.length,
             message: "No hay productos seleccionados",

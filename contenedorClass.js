@@ -92,7 +92,7 @@ class Contenedor {
         }
     }
 
-    async deleteProduct (id) {
+    async deleteProduct(id) {
         try {
             const products = await this.getAll();
             const existProduct = await this.getByID(id)
@@ -122,6 +122,54 @@ class Contenedor {
         } catch (error) {
             console.log('No es posible borrar el articulo', error);
         }
+    }
+
+    async createCart() {
+        try {
+            const cart = await this.getAll();
+            let id;
+            const date = new Date();
+            const products = [];
+            if (!cart.length) {
+                id = 1;
+            } else {
+                id = cart[cart.length - 1].id + 1
+            }
+            const newCart = {id, timestamp: date, products: products}
+            await cart.push(newCart)
+            await fs.promises.writeFile(this.fileJSON, JSON.stringify(cart))
+            return id
+        } catch (error) {
+            console.log('No es posible crear el carrito', error);
+        }
+    }
+
+    async deleteCart(id) {
+        try {
+            const cart = await this.getAll();
+            console.log(cart)
+            let isCart = await cart.find(cartFind => cartFind.id == id);
+            console.log(isCart);
+            if (!isCart) {
+                const data = {
+                    isEmpty: true,
+                    message: `Aún no has creado ningún carrito con el ID: ${id}`,
+                    status: 500
+                }
+                return data;
+            } else {
+                const newCart = cart.filter(cartFilter => cartFilter.id != id);
+                await fs.promises.writeFile(this.fileJSON, JSON.stringify(newCart));
+                const data = {
+                    isEmpty: true,
+                    message: `El carrito con el ID: ${id} fue eliminado`,
+                    status: 200
+                }
+                return data;
+            }
+        } catch (error) {
+        console.log('No es posible borrar el carrito', error);
+    }
     }
 }
 

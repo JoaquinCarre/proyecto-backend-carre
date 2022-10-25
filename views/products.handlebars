@@ -1,13 +1,29 @@
-<h1>Productos</h1>
-<div id="index">
+<header>
+  {{#if isCart}}
+  <form action="/api/carrito/1/productos" method="get">
+    <input type="hidden" value={{id}} name="id" id="productID" />
+    <button type="submit"><img src="https://cdn0.iconfinder.com/data/icons/iconoteka-stroke/24/iconoteka_shopping_cart__grocery_store_b_s-256.png" width="25px" alt="carrito" /> Ir al Carrito</button>
+    <div id="isSure"></div>
+  </form>
+  {{else}}
+  <form action="/api/carrito" method="post">
+    <input type="hidden" value={{id}} name="id" id="productID" />
+    <button type="submit"><img src="https://cdn0.iconfinder.com/data/icons/iconoteka-stroke/24/iconoteka_shopping_cart__grocery_store_b_s-256.png" width="25px" alt="carrito" /> Nuevo Carrito</button>
+    <div id="isSure"></div>
+  </form>
+  {{/if}}
+</header>
+<main>
+  <h1>Productos</h1>
+  <div id="index">
 
-  {{#if isEmpty}}
+    {{#if isEmpty}}
 
     <h3>{{message}}</h3>
 
-  {{/if}}
+    {{/if}}
 
-  {{#if isAdmin}}
+    {{#if isAdmin}}
 
     <div>
       <h2>¡Hola Admin!</h2>
@@ -15,12 +31,41 @@
 
     {{#each productsTemplate}}
 
-      <div class="card card{{id}}">
-        <span><img src={{thumbnail}} alt="imagen" width="50px" /></span>
-        <h3>{{title}}</h3>
-        <p><strong>Precio:</strong> US${{price}}</p>
-        <button>Quitar Producto</button>
+    <div class="card card{{id}}">
+      <span><a href="/api/productos/{{id}}"><img src={{thumbnail}} alt="imagen" width="50px" /></a></span>
+      <h3>{{title}}</h3>
+      <h5>{{description}}</h5>
+      <p><strong>Precio:</strong> US${{price}}</p>
+      <p><strong>Disponible:</strong> {{stock}} unidad/es</p>
+      <button id="deleteProduct{{id}}">Quitar Producto</button>
+      <button id="btnUpdate{{id}}" onclick="showHideFormUpdate({{id}})">Actualizar Producto</button>
+      <div id="updateProductForm{{id}}" style="display: none;">
+        <form id="formToUpdate{{id}}" action="/api/productos">
+          <label for="name_product">Nombre Producto</label>
+          <input type="text" name="title" id="name_product" value="{{title}}" />
+          <br />
+          <br />
+          <label for="info_product">Descripción Producto</label>
+          <input type="text" name="description" id="info_product" value="{{description}}" />
+          <br />
+          <br />
+          <label for="price_product">Precio Producto</label>
+          <input type="number" name="price" id="price_product" value="{{price}}" />
+          <br />
+          <br />
+          <label for="url_product">URL Imagen Producto</label>
+          <input type="text" name="thumbnail" id="url_product" value="{{thumbnail}}" />
+          <br />
+          <br />
+          <label for="stock_product">Stock Producto</label>
+          <input type="number" name="stock" id="stock_product" value="{{stock}}" />
+          <br />
+          <br />
+          <button type="submit" class="btn btn-success">Actualizar</button>
+          {{!-- <input type="hidden" name="_method" value="PUT"> --}}
+        </form>
       </div>
+    </div>
 
     {{/each}}
 
@@ -53,19 +98,25 @@
       </div>
     </div>
 
-  {{else}}
+    {{else}}
 
     {{#each productsTemplate}}
 
-      <div class="card card{{id}}">
-        <span><img src={{thumbnail}} alt="imagen" width="50px" /></span>
-        <h3>{{title}}</h3>
-        <p><strong>Precio:</strong> US${{price}}</p>
-        <button>Agregar al Carrito</button>
-      </div>
+    <div class="card card{{id}}">
+      <span><a href="/api/productos/{{id}}"><img src={{thumbnail}} alt="imagen" width="50px" /></a></span>
+      <h3>{{title}}</h3>
+      <h5>{{description}}</h5>
+      <p><strong>Precio:</strong> US${{price}}</p>
+      <p><strong>Disponible:</strong> {{stock}} unidad/es</p>
+      <form action="/api/carrito/1/productos" method="post">
+        <input type="hidden" value={{id}} name="id" id="productID" />
+        <button type="submit">Agregar al Carrito</button>
+      </form>
+    </div>
 
     {{/each}}
 
-  {{/if}}
+    {{/if}}
 
-</div>
+  </div>
+</main>

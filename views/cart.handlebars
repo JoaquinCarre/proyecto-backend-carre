@@ -9,16 +9,19 @@
             </tr>
             {{#if isEmpty}}
             <tr>
-                <td colspan="3">No hay productos seleccionados</td>
+                <td colspan="3" class="messageTable">{{message}}</td>
             </tr>
             {{/if}}
-            {{#each productos}}
+            {{#each cartTemplate}}
             <tr>
                 <td>{{title}}</td>
                 <td>{{price}}</td>
-                <td>{{thumbnail}}</td>
+                <td><a href="/api/productos/{{id}}"><img src={{thumbnail}} alt="imagen" width="50px" /></a></td>
             </tr>
             {{/each}}
         </table>
+    </div>
+    <div>
+        <button><a href="/api/productos">Agregar productos</a></button>
     </div>
 </div>
