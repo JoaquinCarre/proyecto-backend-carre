@@ -38,7 +38,6 @@ router.get('/:id/productos', async (req, res) => {
             res.status(500).render('cart', data)
         } else {
             const cartTemplate = cartByID[0].products
-            console.log(cartTemplate)
             const data = {
                 cartTemplate,
                 isEmpty: !cartTemplate.length,
@@ -52,9 +51,26 @@ router.get('/:id/productos', async (req, res) => {
 })
 
 router.post('/:id/productos', async (req, res) => {
-    const idProduct = req.body.id;
-    const { id } = req.params
+    try {
+        const idProduct = req.body.id;
+        const product = await products.getByID(idProduct)
+        const { id } = req.params;
+        const data = await cart.addProductCart(id, product[0]);
+        res.status(data.status).render('cart', data)
+    } catch (error) {
+        next(error)
+    }
 })
 
+router.delete('/:id/productos/:id_prod', async (req, res) => {
+    try {
+        const idProduct = req.params.id_prod;
+        const { id } = req.params;
+        const data = await cart.deleteProductByID(id, idProduct);
+        res.status(data.status).render('cart', data)
+    } catch (error) {
+        next(error)
+    }
+})
 
 module.exports = router

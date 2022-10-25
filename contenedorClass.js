@@ -135,7 +135,7 @@ class Contenedor {
             } else {
                 id = cart[cart.length - 1].id + 1
             }
-            const newCart = {id, timestamp: date, products: products}
+            const newCart = { id, timestamp: date, products: products }
             await cart.push(newCart)
             await fs.promises.writeFile(this.fileJSON, JSON.stringify(cart))
             return id
@@ -149,7 +149,6 @@ class Contenedor {
             const cart = await this.getAll();
             console.log(cart)
             let isCart = await cart.find(cartFind => cartFind.id == id);
-            console.log(isCart);
             if (!isCart) {
                 const data = {
                     isEmpty: true,
@@ -168,8 +167,84 @@ class Contenedor {
                 return data;
             }
         } catch (error) {
-        console.log('No es posible borrar el carrito', error);
+            console.log('No es posible borrar el carrito', error);
+        }
     }
+
+    async addProductCart(id, product) {
+        try {
+            const cartByID = await this.getByID(id);
+            if (!cartByID.length) {
+                const data = {
+                    isEmpty: true,
+                    message: `Carrito inexistente con el ID: ${id}`,
+                    status: 500
+                }
+                return data;
+            } else {
+                const cart = await this.getAll();
+                const cartID = await cart.find(cartFind => cartFind.id == id);
+                const cartIndex = await cart.indexOf(cartID)
+                await cart[cartIndex].products.push(product);
+                await fs.promises.writeFile(this.fileJSON, JSON.stringify(cart))
+                const cartTemplate = await cart[cartIndex].products
+                const data = {
+                    cartTemplate,
+                    isEmpty: !cartTemplate.length,
+                    message: `No hay productos seleccionados`,
+                    status: 200
+                }
+                return data;
+            }
+        } catch (error) {
+            console.log('No se puede agregar el producto', error);
+        }
+    }
+
+    async deleteProductByID(id, idProduct) {
+        try {
+            console.log(idProduct)
+            const cart = await this.getAll();
+            const cartID = await cart.find(cartFind => cartFind.id == id);
+            if (!cartID) {
+                const data = {
+                    isEmpty: true,
+                    message: `Carrito inexistente con el ID: ${id}`,
+                    status: 500
+                }
+                return data;
+            } else {
+                const cartIndex = await cart.indexOf(cartID);
+                const productID = await cart[cartIndex].products.find(productFind => productFind.id == idProduct)
+                console.log(productID)
+                console.log(cart[cartIndex].products);
+                if (!productID) {
+                    const data = {
+                        isEmpty: true,
+                        message: `El producto no se encuentra en el carrito`,
+                        status: 500
+                    }
+                    return data;
+                } else {
+                    const productIndex = await cart[cartIndex].products.indexOf(productID);
+                    console.log(productIndex);
+                    await cart[cartIndex].products.splice(productIndex, 1);
+                    console.log(cart[cartIndex].products);
+                    await fs.promises.writeFile(this.fileName, JSON.stringify(cart));
+                    const cartTemplate = await cart[cartIndex].products;
+                    console.log(cartTemplate)
+                    const data = {
+                        cartTemplate,
+                        isEmpty: !cartTemplate.length,
+                        message: `No hay productos seleccionados`,
+                        status: 200
+                    }
+                    return data;
+                }
+            }
+        } catch (error) {
+            console.log('No se puede borrar el producto', error);
+        }
     }
 }
 
