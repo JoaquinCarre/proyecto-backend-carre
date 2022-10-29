@@ -1,13 +1,14 @@
 const knex = require('knex');
 
-export const optionsSQLite = {
+const optionsSQLite = {
   client: 'sqlite3',
   connection: {
-    filename: './mibase.sqlite'
-  }
+    filename: 'db/ecommerce.sqlite'
+  },
+  useNullAsDefault: true
 };
 
-export async function createTableMessages() {
+async function createTableMessages() {
   const knexInstance = knex(optionsSQLite) 
   try {
     const exist = await knexInstance.schema.hasTable('mensajes')
@@ -29,17 +30,18 @@ export async function createTableMessages() {
   }
 }
 
-export const optionsMySQL = {
+const optionsMySQL = {
   client: 'mysql',
   connection: {
     host: '127.0.0.1',
+    port: 3306,
     user: 'root',
     password: '',
     database: 'mibase'
   }
 };
 
-export async function createTableProducts() {
+async function createTableProducts() {
   const knexInstance = knex(optionsMySQL) 
   try {
     const exist = await knexInstance.schema.hasTable('productos')
@@ -61,4 +63,11 @@ export async function createTableProducts() {
   } finally {
     knexInstance.destroy() 
   }
+}
+
+module.exports = {
+  optionsMySQL,
+  createTableProducts,
+  optionsSQLite,
+  createTableMessages
 }

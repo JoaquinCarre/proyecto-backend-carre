@@ -7,12 +7,12 @@ const http = require("http");
 const { Server } = require("socket.io");
 const Contenedor = require('./contenedor');
 
-import {
+const {
   optionsSQLite,
   createTableMessages,
   optionsMySQL,
   createTableProducts
-} from '../db-config/createTables.js'
+} = require('./db-config/createTables.js')
 
 
 const app = express();
@@ -69,46 +69,52 @@ const messagesDefault = [
   },
 ];
 
-try {
-  await createTableMessages()
-  await createTableProducts()
-} catch (error) {
-  console.error(error.message)
+const products = new Contenedor(optionsMySQL, 'productos');
+const messages = new Contenedor(optionsSQLite, 'mensajes');
+
+async function createTable() {
+  try {
+    await createTableMessages()
+    await createTableProducts()
+  } catch (error) {
+    console.error(error.message)
+  }
+
+  const LoadMessages = await messages.getData();
+  console.log(LoadMessages)
+  !LoadMessages ?
+    await messages.insertData(messagesDefault)
+    :
+    true;
+
+  const LoadProducts = await products.getData();
+  !LoadProducts ?
+    await messages.insertData(productsDefault)
+    :
+    true;
 }
 
-const products = new Contenedor(optionsMySQL, 'products');
-const messages = new Contenedor(optionsSQLite, 'messages');
-
-const LoadMessages = await messages.getData();
-!LoadMessages ?
-  await messages.insertData(messagesDefault)
-  :
-  LoadMessages=LoadMessages;
-
-const LoadProducts = await products.getData();
-!LoadProducts ?
-  await messages.insertData(productsDefault)
-  :
-  LoadProducts=LoadProducts;
-
+createTable();
 
 io.on("connection", async (socket) => {
   console.log(`usuario id "${socket.id}" conectado`);
 
   //AGREGADO DE PRODUCTOS
-  const dataProducts = await products.getAll();
+  const dataProducts = await products.getData();
   socket.emit("history-products", dataProducts)
   socket.on("nuevoProducto", async (data) => {
     products.insertData(data)
-    io.emit("productosActualizados", data)
+    const dataP = await products.getData()
+    io.emit("productosActualizados", dataP)
   })
 
   //CENTRO DE MENSAJES - CHAT
-  const dataMessages = await products.getAll();
+  const dataMessages = await products.getData();
   socket.emit("history-messages", dataMessages);
-  socket.on("chat message", (data) => {
+  socket.on("chat message", async (data) => {
     messages.insertData(data);
-    io.emit("notification", data);
+    const dataM = await products.getData()
+    io.emit("notification", dataM);
   });
   socket.on("disconnect", () => {
     console.log("usuario desconectado");

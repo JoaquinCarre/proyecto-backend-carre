@@ -2,14 +2,14 @@ const { Router } = require('express')
 const fs = require('fs')
 const Contenedor = require('../contenedor');
 
-import {
+const {
     optionsMySQL
-  } from '../db-config/createTables.js'
+  } = require('../db-config/createTables.js')
 
 const router = Router()
 
 const products = new Contenedor(optionsMySQL, 'products');
-const productos = await products.getAll();
+const productos = async () => await products.getAll();
 
 router.get('/', async (req, res, next) => {
     try {
@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
         const id = productos.length + 1
         const newProduct = { ...product, id }
         productos.push(newProduct)
-        res.json(await productos)
+        res.json(productos)
     } else {
         res.status(500).json('No es posible subir el producto, faltan datos')
     }

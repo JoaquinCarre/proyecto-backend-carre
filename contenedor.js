@@ -4,7 +4,7 @@ class Contenedor {
     constructor(option, tableName) {
         this.option = option;
         this.tableName = tableName;
-        this.knexInstance = knex(option);
+        this.knexInstance = knex(this.option);
     }
 
     async getData() {
@@ -15,9 +15,9 @@ class Contenedor {
         } catch (error) {
             console.error(error)
             throw error
-        } finally {
-            knexInstance.destroy()
-        }
+        } /* finally {
+            this.knexInstance.destroy()
+        } */
     }
 
     async insertData(data) {
@@ -27,9 +27,9 @@ class Contenedor {
         } catch (error) {
             console.error(error)
             throw error
-        } finally {
-            knexInstance.destroy()
-        }
+        }/*  finally {
+            this.knexInstance.destroy()
+        } */
     }
 }
 
