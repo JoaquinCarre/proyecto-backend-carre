@@ -1,17 +1,19 @@
 const express = require("express");
 const routers = require("./routers");
-const fs = require("fs");
+/* const fs = require("fs"); */
 const path = require("path");
 const handlebars = require("express-handlebars");
 const http = require("http");
 const { Server } = require("socket.io");
-/* const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args)); */
+const Contenedor = require('./contenedor');
 
 import {
-  createTable,
-  insertMessages,
-  getMessages,
-} from '../db/messages.js'
+  optionsSQLite,
+  createTableMessages,
+  optionsMySQL,
+  createTableProducts
+} from '../db-config/createTables.js'
+
 
 const app = express();
 
@@ -37,7 +39,7 @@ app.use(function (err, req, res, next) {
 });
 
 //AGREGADO DE PRODUCTOS
-const products = [
+const productsDefault = [
   {
     title: "Iphone X-18",
     price: 339.40,
@@ -58,17 +60,9 @@ const products = [
   }
 ]
 
-/* function fetchFile() {
-  fetch('./productos.json')
-  .then( res => res.json())
-  .then( (resp) => {console.log(resp); socket.emit("history-products", resp)})
-  .catch ((err) => {
-    console.log('(error de lectura: ', err);
-  })
-} */
 
 //CENTRO DE MENSAJES - CHAT
-const messages = [
+const messagesDefault = [
   {
     email: "Servidor",
     message: "Bienvenidos al Chat público"
@@ -76,36 +70,50 @@ const messages = [
 ];
 
 try {
-  await createTable(messages)
+  await createTableMessages()
+  await createTableProducts()
 } catch (error) {
   console.error(error.message)
 }
 
-function setEvents() {
-  io.on("connection", (socket) => {
-    console.log(`usuario id "${socket.id}" conectado`);
+const products = new Contenedor(optionsMySQL, 'products');
+const messages = new Contenedor(optionsSQLite, 'messages');
 
-    //AGREGADO DE PRODUCTOS
-    /* fetchFile() */
-    socket.emit("history-products", products)
-    socket.on("nuevoProducto", async (data) => {
-      products.push(data)
-      io.emit("productosActualizados", data)
-    })
+const LoadMessages = await messages.getData();
+!LoadMessages ?
+  await messages.insertData(messagesDefault)
+  :
+  LoadMessages=LoadMessages;
 
-    //CENTRO DE MENSAJES - CHAT
-    socket.emit("history-messages", messages);
-    socket.on("chat message", (data) => {
-      messages.push(data);
-      io.emit("notification", data);
-    });
-    socket.on("disconnect", () => {
-      console.log("usuario desconectado");
-    });
+const LoadProducts = await products.getData();
+!LoadProducts ?
+  await messages.insertData(productsDefault)
+  :
+  LoadProducts=LoadProducts;
+
+
+io.on("connection", async (socket) => {
+  console.log(`usuario id "${socket.id}" conectado`);
+
+  //AGREGADO DE PRODUCTOS
+  const dataProducts = await products.getAll();
+  socket.emit("history-products", dataProducts)
+  socket.on("nuevoProducto", async (data) => {
+    products.insertData(data)
+    io.emit("productosActualizados", data)
+  })
+
+  //CENTRO DE MENSAJES - CHAT
+  const dataMessages = await products.getAll();
+  socket.emit("history-messages", dataMessages);
+  socket.on("chat message", (data) => {
+    messages.insertData(data);
+    io.emit("notification", data);
   });
-}
-
-setEvents()
+  socket.on("disconnect", () => {
+    console.log("usuario desconectado");
+  });
+});
 
 server.listen(process.env.PORT, () => {
   console.log(

@@ -1,25 +1,17 @@
 const { Router } = require('express')
 const fs = require('fs')
+const Contenedor = require('../contenedor');
+
+import {
+    optionsMySQL
+  } from '../db-config/createTables.js'
 
 const router = Router()
 
-let productos
+const products = new Contenedor(optionsMySQL, 'products');
+const productos = await products.getAll();
 
-async function readFile() {
-    try {
-        const readFile = await fs.promises.readFile('./productos.txt', "utf-8")
-        const readFileJSON = await JSON.parse(readFile)
-        return await readFileJSON
-    }
-    catch (err) {
-        console.log('error de lectura: ', err)
-    }
-}
-
-router.get('/', async (req, res) => {
-    if (!productos) {
-        productos = await readFile()
-    }
+router.get('/', async (req, res, next) => {
     try {
         const data = {
             isEmpty: !productos.length
@@ -31,9 +23,6 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    if (!productos) {
-        productos = await readFile()
-    }
     const product = req.body
     const { title, price, thumbnail } = product
     if (title && price && thumbnail) {
@@ -47,9 +36,6 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-    if (!productos) {
-        productos = await readFile()
-    }
     const { id } = req.params
     if (productos.length >= id) {
         const oneProduct = productos.filter((el) => el.id == id)
@@ -60,9 +46,6 @@ router.get('/:id', async (req, res) => {
 })
 
 router.put('/:id', async (req, res) => {
-    if (!productos) {
-        productos = await readFile()
-    }
     const { id } = req.params
     const changeDetail = { title: "Nuevo Producto XTZ", price: 1150, thumbnail: "https//nuevoproducto.com" }
     const { title, price, thumbnail } = changeDetail
@@ -81,9 +64,6 @@ router.put('/:id', async (req, res) => {
 })
 
 router.delete('/:id', async (req, res) => {
-    if (!productos) {
-        productos = await readFile()
-    }
     const { id } = req.params
     productos.forEach((product, i) => {
         if (product.id == id) {

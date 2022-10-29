@@ -8,8 +8,6 @@ const productTitle = document.getElementById('name_product');
 const productPrice = document.getElementById('price_product');
 const productThumbnail = document.getElementById('url_product');
 
-let products = [];
-
 function showProducts (data) {
   const item = document.createElement("tr")
   item.innerHTML =
@@ -38,17 +36,15 @@ formProducts.addEventListener("submit", function (e) {
 });
 
 socket.on("history-products", (data) => {
-  products = data;
   productTitle.innerText = "";
   productPrice.innerText = "";
   productThumbnail.innerText = "";
-  products.forEach((prod) => {
+  data.forEach((prod) => {
     showProducts(prod);
   });
 });
 
 socket.on("productosActualizados", (data) => {
-  products.push(data);
   showProducts(data);
 })
 
@@ -59,8 +55,6 @@ const emailUser = document.getElementById("email_input");
 const input = document.getElementById("msg_input");
 
 const date = new Date();
-
-let messages = [];
 
 function showMessage(data) {
   const item = document.createElement("li");
@@ -87,14 +81,12 @@ socket.on("connect", () => {
 });
 
 socket.on("history-messages", (data) => {
-  messages = data;
   message.innerText = "";
-  messages.forEach((msg) => {
+  data.forEach((msg) => {
     showMessage(msg);
   });
 });
 
 socket.on("notification", (data) => {
-  messages.push(data);
   showMessage(data);
 });
