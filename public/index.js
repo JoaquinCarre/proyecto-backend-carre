@@ -81,6 +81,7 @@ socket.on("connect", () => {
 });
 
 socket.on("history-messages", (data) => {
+  /* data = JSON.parse(data) */
   message.innerText = "";
   data.forEach((msg) => {
     showMessage(msg);

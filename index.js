@@ -103,18 +103,20 @@ io.on("connection", async (socket) => {
   const dataProducts = await products.getData();
   socket.emit("history-products", dataProducts)
   socket.on("nuevoProducto", async (data) => {
+    /* data = JSON.parse(data); */
     products.insertData(data)
     const dataP = await products.getData()
-    io.emit("productosActualizados", dataP)
+    io.emit("productosActualizados", JSON.stringify(dataP))
   })
 
   //CENTRO DE MENSAJES - CHAT
   const dataMessages = await products.getData();
   socket.emit("history-messages", dataMessages);
   socket.on("chat message", async (data) => {
+    /* data = JSON.parse(data); */
     messages.insertData(data);
     const dataM = await products.getData()
-    io.emit("notification", dataM);
+    io.emit("notification", JSON.stringify(dataM));
   });
   socket.on("disconnect", () => {
     console.log("usuario desconectado");

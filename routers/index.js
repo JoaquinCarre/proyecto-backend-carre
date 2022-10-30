@@ -8,8 +8,9 @@ const {
 
 const router = Router()
 
-const products = new Contenedor(optionsMySQL, 'products');
-const productos = async () => await products.getAll();
+const products = new Contenedor(optionsMySQL, 'productos');
+async function getProducts() {await products.getData()}
+const productos = getProducts();
 
 router.get('/', async (req, res, next) => {
     try {
