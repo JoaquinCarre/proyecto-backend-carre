@@ -37,9 +37,10 @@ formProducts.addEventListener("submit", function (e) {
 });
 
 socket.on("history-products", (data) => {
-  productTitle.innerText = "";
-  productPrice.innerText = "";
-  productThumbnail.innerText = "";
+  productTitle.value = "";
+  productPrice.value = "";
+  productThumbnail.value = "";
+  tableProducts.innerText = "";
   console.log("history", data)
   data.forEach((prod) => {
     console.log("each", data);
@@ -48,6 +49,9 @@ socket.on("history-products", (data) => {
 });
 
 socket.on("productosActualizados", (data) => {
+  productTitle.value = "";
+  productPrice.value = "";
+  productThumbnail.value = "";
   console.log("update", data)
   showProducts(data);
 })
