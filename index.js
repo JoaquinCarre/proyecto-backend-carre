@@ -37,11 +37,6 @@ app.use(function (err, req, res, next) {
   res.status(500).send("Algo está mal!");
 });
 
-async function getProducts() {
-
-  return products
-}
-
 function setEvents() {
   io.on("connection", async (socket) => {
     console.log(`usuario id "${socket.id}" conectado`);
