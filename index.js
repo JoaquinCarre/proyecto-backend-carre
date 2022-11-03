@@ -38,16 +38,15 @@ app.use(function (err, req, res, next) {
 });
 
 async function getProducts() {
-  await createTableMessages();
-  await createTableProducts();
-  const products = new Contenedor(optionsMySQL, 'productos');
+
   return products
 }
 
 function setEvents() {
   io.on("connection", async (socket) => {
     console.log(`usuario id "${socket.id}" conectado`);
-    const products = await getProducts();
+    await createTableProducts();
+    const products = new Contenedor(optionsMySQL, 'productos');
     //AGREGADO DE PRODUCTOS
     const dataProducts = products.getData();
     socket.emit("history-products", await dataProducts)
@@ -58,6 +57,7 @@ function setEvents() {
     })
 
     //CENTRO DE MENSAJES - CHAT
+    await createTableMessages();
     const messages = new Contenedor(optionsSQLite, 'mensajes');
     const dataMessages = await messages.getData();
     socket.emit("history-messages", dataMessages);

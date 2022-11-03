@@ -40,7 +40,7 @@ socket.on("history-products", (data) => {
   productTitle.value = "";
   productPrice.value = "";
   productThumbnail.value = "";
-  tableProducts.innerText = "";
+  tableProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [US$]</th><th>Imagen</th></tr>";
   console.log("history", data)
   data.forEach((prod) => {
     console.log("each", data);
