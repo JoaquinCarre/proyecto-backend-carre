@@ -1,23 +1,29 @@
 const { Router } = require('express')
-const fs = require('fs')
 const Contenedor = require('../contenedor');
 
 const {
-    optionsMySQL
-  } = require('../db-config/createTables.js')
+    optionsMySQL,
+    createTableProducts,
+    createTableMessages
+} = require('../db-config/createTables.js')
 
 const router = Router()
 
 const products = new Contenedor(optionsMySQL, 'productos');
-async function getProducts() {await products.getData()}
-const productos = getProducts();
+
+let productos = [];
 
 router.get('/', async (req, res, next) => {
     try {
+        await createTableProducts();
+        await createTableMessages();
+        const getProductos = await products.getData();
+        productos = await getProductos;
         const data = {
             isEmpty: !productos.length
         };
         res.render('index', data);
+        //ver como adherir data con .then luego de que carguen los productos, para que no aparezca el cartel que no hay productos
     } catch (error) {
         next(error);
     }

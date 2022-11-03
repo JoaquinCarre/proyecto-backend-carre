@@ -15,9 +15,7 @@ class Contenedor {
         } catch (error) {
             console.error(error)
             throw error
-        } /* finally {
-            this.knexInstance.destroy()
-        } */
+        }
     }
 
     async insertData(data) {
@@ -27,9 +25,7 @@ class Contenedor {
         } catch (error) {
             console.error(error)
             throw error
-        }/*  finally {
-            this.knexInstance.destroy()
-        } */
+        }
     }
 }
 

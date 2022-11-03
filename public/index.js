@@ -9,6 +9,7 @@ const productPrice = document.getElementById('price_product');
 const productThumbnail = document.getElementById('url_product');
 
 function showProducts (data) {
+  console.log("show", data)
   const item = document.createElement("tr")
   item.innerHTML =
     `<td>${data.title}</td>
@@ -39,12 +40,15 @@ socket.on("history-products", (data) => {
   productTitle.innerText = "";
   productPrice.innerText = "";
   productThumbnail.innerText = "";
+  console.log("history", data)
   data.forEach((prod) => {
+    console.log("each", data);
     showProducts(prod);
   });
 });
 
 socket.on("productosActualizados", (data) => {
+  console.log("update", data)
   showProducts(data);
 })
 
@@ -54,13 +58,12 @@ const formChat = document.getElementById("form");
 const emailUser = document.getElementById("email_input");
 const input = document.getElementById("msg_input");
 
-const date = new Date();
-
 function showMessage(data) {
+  console.log("showmessage", data)
   const item = document.createElement("li");
   item.className = "list-group-item text-start";
   item.innerHTML =
-    `<strong style="color: blue">${data.email}</strong> <font color="brown">[${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}]</font> : <i style="color: green">${data.message}</i>`;
+    `<strong style="color: blue">${data.email}</strong> <font color="brown">${data.date}</font> : <i style="color: green">${data.message}</i>`;
   message.appendChild(item);
 }
 
@@ -68,8 +71,8 @@ formChat.addEventListener("submit", function (e) {
   e.preventDefault()
   const data = {
     email: emailUser.value,
-    date: new Date(),
     message: input.value,
+    date: new Date().toLocaleString()
   };
   socket.emit("chat message", data);
   input.value = "";
@@ -81,13 +84,14 @@ socket.on("connect", () => {
 });
 
 socket.on("history-messages", (data) => {
-  /* data = JSON.parse(data) */
+  console.log("historymessage", data)
   message.innerText = "";
-  data.forEach((msg) => {
+  data.forEach(msg => {
     showMessage(msg);
   });
 });
 
 socket.on("notification", (data) => {
+  console.log("noti", data)
   showMessage(data);
 });
