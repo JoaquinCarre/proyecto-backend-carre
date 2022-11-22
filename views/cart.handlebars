@@ -1,0 +1,29 @@
+<div>
+    <h1>Carrito de Compras</h1>
+    <div id="tableContainer">
+        <table id="tableIndex" border="2" align="center">
+            <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Imagen</th>
+                <th style="color:gray">Eliminar Producto</th>
+            </tr>
+            {{#if isEmpty}}
+            <tr>
+                <td colspan="4" class="messageTable">{{message}}</td>
+            </tr>
+            {{/if}}
+            {{#each cartTemplate}}
+            <tr>
+                <td>{{title}}</td>
+                <td>{{price}}</td>
+                <td><a href="/api/productos/{{id}}"><img src={{thumbnail}} alt="imagen" width="50px" /></a></td>
+                <td><button style="color:red"><strong>X</strong></button></td>
+            </tr>
+            {{/each}}
+        </table>
+    </div>
+    <div>
+        <button><a href="/api/productos">Agregar productos</a></button>
+    </div>
+</div>
