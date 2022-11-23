@@ -15,7 +15,8 @@ const Admin = false
 
 router.get('/', async (req, res, next) => {
     const productsJSON = await products.getAll();
-    const productsTemplate = productsJSON
+    console.log('productos JSON', productsJSON);
+    const productsTemplate = productsJSON;
     const cartJSON = await cart.getAll();
     let isCartJSON;
     if (!cartJSON.length) {

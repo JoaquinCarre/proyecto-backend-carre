@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "set TYPE_PERSISTANCE=filesystem&& node .",
+    "start": "set TYPE_PERSISTANCE=mongodb&& nodemon -r dotenv/config server.js",
     "dev": "nodemon -r dotenv/config server.js"
   },
   "repository": {

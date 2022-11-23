@@ -17,9 +17,9 @@ class ContainerMongoDB {
         }
     }
 
-    async getByID(byId) {
+    async getByID(id) {
         try {
-            return this.collection.find({_id: byId})
+            return await this.collection.find({ _id: id })
         } catch (error) {
             console.log('No se puede obtener el producto solicitado', error);
         }
@@ -27,8 +27,26 @@ class ContainerMongoDB {
 
     async addProduct(product) {
         try {
-            const result = await this.collection.create(product)
-            return result
+            const { title, description, price, thumbnail, stock } = product
+            if (title && description && price && thumbnail && stock) {
+                const result = await this.collection.create(product)
+                console.log('resultado addProduct', result)
+                const productsTemplate = await result
+                const data = {
+                    productsTemplate,
+                    isEmpty: false,
+                    isAdmin: true,
+                    status: 200
+                }
+                return data
+            } else {
+                const data = {
+                    isEmpty: true,
+                    message: "No es posible subir el producto, faltan datos",
+                    status: 500
+                }
+                return data
+            }
         } catch (error) {
             console.log('No es posible guardar el articulo', error);
         }
@@ -36,7 +54,25 @@ class ContainerMongoDB {
 
     async updateProduct(id, product) {
         try {
-
+            const { title, description, price, thumbnail, stock } = product
+            if (title && description && price && thumbnail && stock) {
+                const result = await this.collection.updateOne({ _id: id }, { $set: product });
+                const productsTemplate = await this.getAll()
+                const data = {
+                    productsTemplate,
+                    isEmpty: false,
+                    isAdmin: true,
+                    status: 200
+                }
+                return data
+            } else {
+                const data = {
+                    isEmpty: true,
+                    message: "Hay campos incompletos",
+                    status: 500
+                }
+                return data
+            }
         } catch (error) {
             console.log('No es posible actualizar el articulo', error);
         }
@@ -44,7 +80,25 @@ class ContainerMongoDB {
 
     async deleteProduct(id) {
         try {
-
+            const isProduct = await this.collection.find({ _id: id });
+            if (!isProduct) {
+                const data = {
+                    isEmpty: true,
+                    message: "No existe el producto seleccionado",
+                    status: 500
+                }
+                return data
+            } else {
+                const result = await this.collection.deleteOne({ _id: id });
+                const productsTemplate = await this.getAll();
+                const data = {
+                    productsTemplate,
+                    isEmpty: false,
+                    isAdmin: true,
+                    status: 200
+                }
+                return data
+            }
         } catch (error) {
             console.log('No es posible borrar el articulo', error);
         }
@@ -52,7 +106,8 @@ class ContainerMongoDB {
 
     async createCart() {
         try {
-
+            const result = await this.collection.create()
+            return result;
         } catch (error) {
             console.log('No es posible crear el carrito', error);
         }
@@ -60,7 +115,25 @@ class ContainerMongoDB {
 
     async deleteCart(id) {
         try {
-
+            const isCart = await this.collection.find({ _id: id });
+            if (!isCart) {
+                const data = {
+                    isEmpty: true,
+                    message: "No existe el producto seleccionado",
+                    status: 500
+                }
+                return data
+            } else {
+                const result = await this.collection.deleteOne({ _id: id });
+                const productsTemplate = await this.getAll();
+                const data = {
+                    productsTemplate,
+                    isEmpty: false,
+                    isAdmin: true,
+                    status: 200
+                }
+                return data
+            }
         } catch (error) {
             console.log('No es posible borrar el carrito', error);
         }
@@ -68,7 +141,31 @@ class ContainerMongoDB {
 
     async addProductCart(id, product) {
         try {
-
+            const getCart = await this.getAll();
+            if (!getCart.length) {
+                console.log('Carrito nuevo creado');
+                await this.createCart();
+            }
+            const cartByID = await this.getByID(id);
+            if (!cartByID.length) {
+                const data = {
+                    isEmpty: true,
+                    message: `Carrito inexistente con el ID: ${id}`,
+                    status: 500
+                }
+                return data;
+            } else {
+                const result = await this.collection.find({ _id: id })
+                const addProduct = await this.collection.updateOne({ _id: id }, { $push: { "products": { product } } });
+                const cartTemplate = await this.collection.find({ _id: id });
+                const data = {
+                    cartTemplate,
+                    isEmpty: !cartTemplate.length,
+                    message: `No hay productos seleccionados`,
+                    status: 200
+                }
+                return data;
+            }
         } catch (error) {
             console.log('No se puede agregar el producto', error);
         }
@@ -76,7 +173,35 @@ class ContainerMongoDB {
 
     async deleteProductByID(id, idProduct) {
         try {
-
+            const cartByID = await this.getByID(id);
+            if (!cartByID.length) {
+                const data = {
+                    isEmpty: true,
+                    message: `Carrito inexistente con el ID: ${id}`,
+                    status: 500
+                }
+                return data;
+            } else {
+                const isProduct = await this.carrito.findOne({ $and: [{ _id: id }, { "products": { _id: idProduct } }] });
+                if (!isProduct) {
+                    const data = {
+                        isEmpty: true,
+                        message: `El producto no se encuentra en el carrito`,
+                        status: 500
+                    };
+                    return data;
+                } else {
+                    const result = await this.carrito.updateOne({ _id: id }, { $unset: { "products": { _id: idProduct } } });
+                    const cartTemplate = await this.carrito.findOne({ _id: id });
+                    const data = {
+                        cartTemplate,
+                        isEmpty: !cartTemplate.length,
+                        message: `No hay productos seleccionados`,
+                        status: 200
+                    }
+                    return data;
+                }
+            }
         } catch (error) {
             console.log('No se puede borrar el producto', error);
         }
