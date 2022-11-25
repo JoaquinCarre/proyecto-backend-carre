@@ -9,9 +9,12 @@ class ContainerMongoDB {
         this.collection = mongoose.model(modelName, schema)
     }
 
-    getAll() {
+    async getAll() {
         try {
-            return this.collection.find({})
+            console.log('Tratando de obtener productos');
+            const allProducts = await this.collection.find({});
+            console.log('allProducts', allProducts);
+            return allProducts;
         } catch (error) {
             console.log('No es posible obtener los productos de la base de datos', error);
         }
