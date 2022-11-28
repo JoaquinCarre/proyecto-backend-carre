@@ -17,7 +17,7 @@ class ContainerFileSystem {
     async getByID(id) {
         try {
             const products = await this.getAll();
-            const oneProduct = await products.filter((el) => el.id == id)
+            const oneProduct = await products.filter((el) => el._id == id)
             return oneProduct
         } catch (error) {
             console.log('No se puede obtener el producto solicitado', error);
@@ -30,9 +30,9 @@ class ContainerFileSystem {
             const { title, description, price, thumbnail, stock } = product
             if (title && description && price && thumbnail && stock) {
                 const code = Math.random().toString(36).slice(1, 7)
-                const id = products.length + 1
+                const _id = products.length + 1
                 const date = new Date();
-                const newProduct = { ...product, code, id, timestamp: date }
+                const newProduct = { ...product, code, _id, timestamp: date }
                 await products.push(newProduct)
                 await promises.writeFile(this.fileJSONRoute, JSON.stringify(products))
                 const productsTemplate = await products
@@ -62,7 +62,7 @@ class ContainerFileSystem {
             const { title, description, price, thumbnail, stock } = product
             if (title && description && price && thumbnail && stock) {
                 await products.forEach((prod) => {
-                    if (prod.id == id) {
+                    if (prod._id == id) {
                         prod.title = title
                         prod.description = description
                         prod.price = price
@@ -105,7 +105,7 @@ class ContainerFileSystem {
                 return data
             } else {
                 await products.forEach((prod, i) => {
-                    if (prod.id == id) {
+                    if (prod._id == id) {
                         products.splice(i, 1)
                     }
                 });
@@ -133,9 +133,9 @@ class ContainerFileSystem {
             if (!cart.length) {
                 id = 1;
             } else {
-                id = cart[cart.length - 1].id + 1
+                id = cart[cart.length - 1]._id + 1
             }
-            const newCart = { id, timestamp: date, products: products }
+            const newCart = { _id: id, timestamp: date, products: products }
             await cart.push(newCart)
             await promises.writeFile(this.fileJSONRoute, JSON.stringify(cart))
             return id
@@ -148,7 +148,7 @@ class ContainerFileSystem {
         try {
             const cart = await this.getAll();
             console.log(cart)
-            let isCart = await cart.find(cartFind => cartFind.id == id);
+            let isCart = await cart.find(cartFind => cartFind._id == id);
             if (!isCart) {
                 const data = {
                     isEmpty: true,
@@ -157,7 +157,7 @@ class ContainerFileSystem {
                 }
                 return data;
             } else {
-                const newCart = cart.filter(cartFilter => cartFilter.id != id);
+                const newCart = cart.filter(cartFilter => cartFilter._id != id);
                 await promises.writeFile(this.fileJSONRoute, JSON.stringify(newCart));
                 const data = {
                     isEmpty: true,
@@ -188,7 +188,7 @@ class ContainerFileSystem {
                 return data;
             } else {
                 const cart = await this.getAll();
-                const cartID = await cart.find(cartFind => cartFind.id == id);
+                const cartID = await cart.find(cartFind => cartFind._id == id);
                 const cartIndex = await cart.indexOf(cartID)
                 await cart[cartIndex].products.push(product);
                 await promises.writeFile(this.fileJSONRoute, JSON.stringify(cart))
@@ -209,7 +209,7 @@ class ContainerFileSystem {
     async deleteProductByID(id, idProduct) {
         try {
             const cart = await this.getAll();
-            const cartID = await cart.find(cartFind => cartFind.id == id);
+            const cartID = await cart.find(cartFind => cartFind._id == id);
             if (!cartID) {
                 const data = {
                     isEmpty: true,
@@ -219,7 +219,7 @@ class ContainerFileSystem {
                 return data;
             } else {
                 const cartIndex = await cart.indexOf(cartID);
-                const productID = await cart[cartIndex].products.find(productFind => productFind.id == idProduct)
+                const productID = await cart[cartIndex].products.find(productFind => productFind._id == idProduct)
                 if (!productID) {
                     const data = {
                         isEmpty: true,

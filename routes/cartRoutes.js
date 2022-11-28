@@ -58,7 +58,10 @@ router.post('/:id/productos', async (req, res, next) => {
     try {
         const idProduct = req.body.id;
         const product = await products.getByID(idProduct)
+        console.log('esteproductoagrego: ', product)
         const { id } = req.params;
+        /* console.log('el mejor id: ', id) */
+        /* Ver como agregar el id con new ObjectId(id) para que lo lea en el contenedor */
         const data = await cart.addProductCart(id, product[0]);
         res.status(data.status).render('cart', data)
     } catch (error) {

@@ -12,7 +12,7 @@ class ContainerMongoDB {
     async getAll() {
         try {
             console.log('Tratando de obtener productos');
-            const allProducts = await this.collection.find({});
+            const allProducts = await this.collection.find({}).lean();
             console.log('allProducts', allProducts);
             return allProducts;
         } catch (error) {
@@ -22,7 +22,7 @@ class ContainerMongoDB {
 
     async getByID(id) {
         try {
-            return await this.collection.find({ _id: id })
+            return await this.collection.find({ _id: id }).lean();
         } catch (error) {
             console.log('No se puede obtener el producto solicitado', error);
         }
@@ -83,7 +83,7 @@ class ContainerMongoDB {
 
     async deleteProduct(id) {
         try {
-            const isProduct = await this.collection.find({ _id: id });
+            const isProduct = await this.collection.find({ _id: id }).lean();
             if (!isProduct) {
                 const data = {
                     isEmpty: true,
@@ -92,7 +92,7 @@ class ContainerMongoDB {
                 }
                 return data
             } else {
-                const result = await this.collection.deleteOne({ _id: id });
+                await this.collection.deleteOne({ _id: id });
                 const productsTemplate = await this.getAll();
                 const data = {
                     productsTemplate,
@@ -109,8 +109,12 @@ class ContainerMongoDB {
 
     async createCart() {
         try {
-            const result = await this.collection.create()
-            return result;
+            const result = await this.collection.create({
+                timestamp: Date.now(),
+                products: []
+            });
+            console.log('id', result._id.toString());
+            return result._id.toString();
         } catch (error) {
             console.log('No es posible crear el carrito', error);
         }
@@ -118,7 +122,7 @@ class ContainerMongoDB {
 
     async deleteCart(id) {
         try {
-            const isCart = await this.collection.find({ _id: id });
+            const isCart = await this.collection.find({ _id: id }).lean();
             if (!isCart) {
                 const data = {
                     isEmpty: true,
@@ -158,9 +162,11 @@ class ContainerMongoDB {
                 }
                 return data;
             } else {
-                const result = await this.collection.find({ _id: id })
-                const addProduct = await this.collection.updateOne({ _id: id }, { $push: { "products": { product } } });
-                const cartTemplate = await this.collection.find({ _id: id });
+                //Ver como coincidir el id que viene como un string con el id del producto buscado, agregando new ObjectId
+                console.log('queproducto', product);
+                await this.collection.updateOne({ _id: id }, { $push: { products: product } });
+                const cartProducts = await this.collection.find({ _id: id }).lean();
+                const cartTemplate = cartProducts[0].products;
                 const data = {
                     cartTemplate,
                     isEmpty: !cartTemplate.length,
@@ -185,7 +191,7 @@ class ContainerMongoDB {
                 }
                 return data;
             } else {
-                const isProduct = await this.carrito.findOne({ $and: [{ _id: id }, { "products": { _id: idProduct } }] });
+                const isProduct = await this.carrito.findOne({ $and: [{ _id: id }, { "products": { _id: idProduct } }] }).lean();
                 if (!isProduct) {
                     const data = {
                         isEmpty: true,
@@ -195,7 +201,7 @@ class ContainerMongoDB {
                     return data;
                 } else {
                     const result = await this.carrito.updateOne({ _id: id }, { $unset: { "products": { _id: idProduct } } });
-                    const cartTemplate = await this.carrito.findOne({ _id: id });
+                    const cartTemplate = await this.carrito.findOne({ _id: id }).lean();
                     const data = {
                         cartTemplate,
                         isEmpty: !cartTemplate.length,

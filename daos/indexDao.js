@@ -18,6 +18,13 @@ switch (process.env.TYPE_PERSISTANCE) {
         cartDao = new CartDaoMongoDB();
         break;
 
+    case 'firebase':
+        const { default: ProductDaoFirebase } = await import('./products/productDaoFirebase.js');
+        const { default: CartDaoFirebase } = await import('./cart/cartDaoFirebase.js');
+        productDao = new ProductDaoFirebase();
+        cartDao = new CartDaoFirebase();
+        break;
+
     default:
         const { default: ProductDaoFileSystem } = await import('./products/productDaoFileSystem.js');
         const { default: CartDaoFileSystem } = await import('./cart/cartDaoFileSystem.js');

@@ -14,7 +14,7 @@ class ContainerMemory {
 
     async getByID(id) {
         try {
-            const productId = await this.products.find(el => el.id === id);
+            const productId = await this.products.find(el => el._id === id);
             if (!productId) {
                 throw new Error("Error en la búsqueda: producto no encontrado");
             } else {
@@ -30,9 +30,9 @@ class ContainerMemory {
             const { title, description, price, thumbnail, stock } = product;
             if (title && description && price && thumbnail && stock) {
                 const code = Math.random().toString(36).slice(1, 7);
-                const addId = this.products[this.products.length - 1].id + 1;
+                const addId = this.products[this.products.length - 1]._id + 1;
                 const date = new Date();
-                const newProduct = { ...product, code, id: addId, timestamp: date };
+                const newProduct = { ...product, code, _id: addId, timestamp: date };
                 await this.products.push(newProduct);
                 const productsTemplate = await this.products;
                 const data = {
@@ -60,7 +60,7 @@ class ContainerMemory {
             const { title, description, price, thumbnail, stock } = product;
             if (title && description && price && thumbnail && stock) {
                 await this.products.forEach((prod) => {
-                    if (prod.id == id) {
+                    if (prod._id == id) {
                         prod.title = title
                         prod.description = description
                         prod.price = price
@@ -101,7 +101,7 @@ class ContainerMemory {
                 return data;
             } else {
                 await this.products.forEach((prod, i) => {
-                    if (prod.id == id) {
+                    if (prod._id == id) {
                         this.products.splice(i, 1);
                     };
                 });
@@ -131,9 +131,9 @@ class ContainerMemory {
             if (!this.cart.length) {
                 addId = 1;
             } else {
-                addId = this.cart[this.cart.length - 1].id + 1;
+                addId = this.cart[this.cart.length - 1]._id + 1;
             };
-            const newCart = { id: addId, timestamp: date, products: addedProducts };
+            const newCart = { _id: addId, timestamp: date, products: addedProducts };
             this.cart.push(newCart);
             return addId;
         } catch (error) {
@@ -143,7 +143,7 @@ class ContainerMemory {
 
     async deleteCart(id) {
         try {
-            let isCart = await this.cart.find(cartFind => cartFind.id == id);
+            let isCart = await this.cart.find(cartFind => cartFind._id == id);
             if (!isCart) {
                 const data = {
                     isEmpty: true,
@@ -152,7 +152,7 @@ class ContainerMemory {
                 };
                 return data;
             } else {
-                const newCart = this.cart.filter(cartFilter => cartFilter.id != id);
+                const newCart = this.cart.filter(cartFilter => cartFilter._id != id);
                 this.cart = newCart;
                 const data = {
                     isEmpty: true,
@@ -172,7 +172,7 @@ class ContainerMemory {
                 console.log('Carrito nuevo creado');
                 await this.createCart();
             }
-            let isCart = await this.cart.find(cartFind => cartFind.id == id);
+            let isCart = await this.cart.find(cartFind => cartFind._id == id);
             if (!isCart) {
                 const data = {
                     isEmpty: true,
@@ -181,7 +181,7 @@ class ContainerMemory {
                 }
                 return data;
             }
-            const cartID = await this.cart.find(cartFind => cartFind.id == id);
+            const cartID = await this.cart.find(cartFind => cartFind._id == id);
             const cartIndex = this.cart.indexOf(cartID);
             await this.cart[cartIndex].products.push(product);
             const cartTemplate = await cart[cartIndex].products;
@@ -200,7 +200,7 @@ class ContainerMemory {
 
     async deleteProductByID(id, idProduct) {
         try {
-            const cartID = await this.cart.find(cartFind => cartFind.id == id);
+            const cartID = await this.cart.find(cartFind => cartFind._id == id);
             if (!cartID) {
                 const data = {
                     isEmpty: true,
@@ -210,7 +210,7 @@ class ContainerMemory {
                 return data;
             } else {
                 const cartIndex = this.cart.indexOf(cartID);
-                const productID = await this.cart[cartIndex].products.find(productFind => productFind.id == idProduct);
+                const productID = await this.cart[cartIndex].products.find(productFind => productFind._id == idProduct);
                 if (!productID) {
                     const data = {
                         isEmpty: true,
