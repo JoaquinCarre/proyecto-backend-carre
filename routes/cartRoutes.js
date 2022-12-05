@@ -69,6 +69,8 @@ router.delete('/:id/productos/:id_prod', async (req, res, next) => {
     try {
         const idProduct = req.params.id_prod;
         const { id } = req.params;
+        console.log('se envia data con id carrito: ', id)
+        console.log('se envia data con id producto: ', idProduct)
         const data = await cart.deleteProductByID(id, idProduct);
         res.status(data.status).render('cart', data)
     } catch (error) {

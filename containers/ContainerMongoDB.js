@@ -23,6 +23,7 @@ class ContainerMongoDB {
 
     async getByID(id) {
         try {
+            id = id.toString();
             return await this.collection.find({ _id: id }).lean();
         } catch (error) {
             console.log('No se puede obtener el producto solicitado', error);
@@ -67,6 +68,7 @@ class ContainerMongoDB {
     async updateProduct(id, product) {
         try {
             const { title, description, price, thumbnail, stock } = product
+            id = id.toString();
             if (title && description && price && thumbnail && stock) {
                 const result = await this.collection.updateOne({ _id: id }, { $set: product });
                 const productsTemplate = await this.getAll()
@@ -92,6 +94,7 @@ class ContainerMongoDB {
 
     async deleteProduct(id) {
         try {
+            id = id.toString();
             const isProduct = await this.collection.find({ _id: id }).lean();
             if (!isProduct) {
                 const data = {
@@ -169,7 +172,9 @@ class ContainerMongoDB {
                 console.log('queproducto', product);
                 await this.collection.updateOne({ _id: id }, { $push: { products: product } });
                 const cartProducts = await this.collection.find({ _id: id }).lean();
-                const cartTemplate = cartProducts[0].products;
+                let cartTemplate = cartProducts[0].products;
+                cartTemplate = cartTemplate.map(el =>({...el, _id : el._id.toString()}));
+                console.log('añadiendo carttemplate', cartTemplate);
                 const data = {
                     cartTemplate,
                     isEmpty: !cartTemplate.length,
@@ -193,8 +198,8 @@ class ContainerMongoDB {
                     status: 500
                 }
                 return data;
-            } else {
-                /* const isProduct = await this.collection.findOne({ $and: [{ _id: id }, { products: { _id: idProduct } }] }).lean();
+            /* } else {
+                const isProduct = await this.collection.findOne({ products: { _id: idProduct } }).lean();
                 console.log('producto a borrar: ', isProduct);
                 if (!isProduct) {
                     const data = {
@@ -202,10 +207,13 @@ class ContainerMongoDB {
                         message: `El producto no se encuentra en el carrito`,
                         status: 500
                     };
-                    return data;
-                } else { */
+                    return data; */
+                } else {
                 await this.collection.updateOne({ _id: id }, { $pull: { products: { _id: idProduct } }}); //Esta lógica borra todos los productos que cumplan con la condición, agregar a futuro un campo de cantidad del mismo producto en el carrito
-                const cartTemplate = await this.collection.findOne({ _id: id }).lean();
+                let cartTemplate = await this.collection.findOne({ _id: id }).lean();
+                console.log('cartTemplate', cartTemplate)
+                cartTemplate = cartTemplate.products.map(el =>({...el, _id : el._id.toString()}))
+                console.log('cart cambiado', cartTemplate);
                 const data = {
                     cartTemplate,
                     isEmpty: !cartTemplate.length,
