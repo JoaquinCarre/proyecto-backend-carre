@@ -25,6 +25,14 @@ class ContainerMemory {
         }
     }
 
+    async getId(data) {
+        try {
+            return await data[0]._id;
+        } catch (error) {
+            console.log('No se puede obtener ID', error);
+        }
+    }
+
     async addProduct(product) {
         try {
             const { title, description, price, thumbnail, stock } = product;

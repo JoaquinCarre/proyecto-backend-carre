@@ -15,30 +15,28 @@ const Admin = false
 
 router.get('/', async (req, res, next) => {
     const productsJSON = await products.getAll();
-    /* console.log('productos JSON', productsJSON); */
     
     const cartJSON = await cart.getAll();
-    /* console.log('cartJSON', cartJSON); */
-    /* console.log('cartJSONId', cartJSON[0]._id.toString()); */
     let isCartJSON;
     if (!cartJSON.length) {
         isCartJSON = false;
     } else {
         isCartJSON = true;
     }
-    const productsTemplate = productsJSON.map((prod)=>({...prod, isCart: isCartJSON, idCart: cartJSON[0]._id.toString()}));
+    const getIdCart = await cart.getId(cartJSON);
+    const productsTemplate = productsJSON.map((prod)=>({...prod, isCart: isCartJSON, idCart: getIdCart}));
     console.log('productos Templates: ', productsTemplate);
     try {
         const data = {
             isCart: isCartJSON,
-            idCart: cartJSON[0]._id.toString(),
+            idCart: getIdCart,
             productsTemplate,
             isEmpty: !productsJSON.length,
             message: "No hay productos seleccionados",
             isAdmin: Admin
         }
-        console.log('isCart', data.isCart);
         res.render('products', data);
+        res.render('cart', {idCart: getIdCart});
     } catch (error) {
         next(error)
     }

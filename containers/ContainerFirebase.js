@@ -6,8 +6,8 @@ const cert = JSON.parse(await readFile(
     new URL('./backend-coderhouse-9b915-firebase-adminsdk-ab3n2-33d0a55edb.json', import.meta.url)
 ))
 
-admin.initializeApp({credential: admin.credential.cert(cert)});
-console.log ('Base Firebase Conectada!');
+admin.initializeApp({ credential: admin.credential.cert(cert) });
+console.log('Base Firebase Conectada!');
 
 const db = admin.firestore();
 
@@ -19,7 +19,8 @@ class ContainerFirebase {
     async getAll() {
         try {
             const querySnapshot = await this.collection.get();
-            const products = querySnapshot.docs.map((doc)=>({_id: doc.id.toString(), ...doc.data()}));
+            const products = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            console.log('Se obtienen los siguientes productos: ', products);
             return products;
         } catch (error) {
             console.log('No es posible obtener los productos de la base de datos', error);
@@ -30,11 +31,20 @@ class ContainerFirebase {
         try {
             const doc = this.collection.doc(id);
             const item = await doc.get();
-            const response = item.data();
-            console.log ('Producto obtenido por id: ', response);
+            const response = [item.data()];
+            console.log('Elemento obtenido por id: ', response);
             return response;
         } catch (error) {
             console.log('No se puede obtener el producto solicitado', error);
+        }
+    }
+
+    async getId(data) {
+        try {
+            console.log('el id que obtengo es: ', await data[0].id)
+            return await data[0].id;
+        } catch (error) {
+            console.log('No se puede obtener ID')
         }
     }
 
@@ -45,7 +55,7 @@ class ContainerFirebase {
                 let id = uuidv4();
                 const doc = this.collection.doc(id);
                 await doc.create(product);
-                console.log ('Producto añadido');
+                console.log('Producto añadido');
                 const productsTemplate = await this.getAll();
                 const data = {
                     productsTemplate,
@@ -107,7 +117,7 @@ class ContainerFirebase {
             } else {
                 const doc = this.collection.doc(id);
                 await doc.delete();
-                console.log ("El producto ha sido borrado con éxito");
+                console.log("El producto ha sido borrado con éxito");
                 const productsTemplate = await this.getAll();
                 const data = {
                     productsTemplate,
@@ -122,7 +132,131 @@ class ContainerFirebase {
         }
     }
 
-    
+    async createCart() {
+        try {
+            let id = uuidv4();
+            const doc = this.collection.doc(id);
+            doc.create({
+                _id: id,
+                timestamp: Date.now(),
+                products: []
+            });
+            return id;
+        } catch (error) {
+            console.log('No es posible crear el carrito', error);
+        }
+    }
+
+    async deleteCart(id) {
+        try {
+            const existCart = await this.getByID(id);
+            if (!existCart) {
+                const data = {
+                    isEmpty: true,
+                    message: `Carrito inexistente con el ID: ${id}`,
+                    status: 500
+                }
+                return data
+            } else {
+                const doc = this.collection.doc(id);
+                await doc.delete();
+                const productsTemplate = await this.getAll();
+                const data = {
+                    productsTemplate,
+                    isEmpty: false,
+                    isAdmin: true,
+                    status: 200
+                }
+                return data
+            }
+        } catch (error) {
+            console.log('No es posible borrar el carrito', error);
+        }
+    }
+
+    async addProductCart(id, product) {
+        try {
+            console.log('el producto', product._id);
+            const existCart = await this.getByID(id);
+            if (!existCart.length) {
+                const data = {
+                    isEmpty: true,
+                    message: `Carrito inexistente con el ID: ${id}`,
+                    status: 500
+                }
+                return data;
+            } else {
+                let productsInCart = existCart[0].products;
+                console.log('products in cart', productsInCart);
+                let indexInCart = productsInCart.findIndex(el => el._id === product._id);
+                //al parecer al iterar con findIndex y encontrar varios iguales te devuelve false
+                console.log('index', indexInCart);
+                if (indexInCart === -1) {
+                    console.log('index -1')
+                    console.log ('quepasaproducts0', productsInCart);
+                    productsInCart.push({...product, quantity: 1});
+                    console.log('products in cart 2', productsInCart);
+                } else {
+                    console.log('index ok')
+                    productsInCart[indexInCart].quantity++
+                }
+                /* await cartByID[0].products.push(product); */
+                const cartTemplate = await productsInCart;
+                console.log('templateee', cartTemplate);
+                this.collection.doc(id).set({ _id: id, timestamp: existCart[0].timestamp, products: productsInCart });
+                const data = {
+                    cartTemplate,
+                    isEmpty: !cartTemplate.length,
+                    message: `No hay productos seleccionados`,
+                    status: 200
+                }
+                return data;
+            }
+        } catch (error) {
+            console.log('No se puede agregar el producto', error);
+        }
+    }
+
+    //Modificar esta función para Firebase
+    async deleteProductByID(id, idProduct) {
+        try {
+            const cartByID = await this.getByID(id);
+            if (!cartByID.length) {
+                const data = {
+                    isEmpty: true,
+                    message: `Carrito inexistente con el ID: ${id}`,
+                    status: 500
+                }
+                return data;
+            }
+            let productsInCart = cartByID[0].products;
+            const productToDelete = productsInCart.find(el => el._id === idProduct);
+            console.log('finded: ', productToDelete);
+            const indexCartProduct = productsInCart.findIndex(prod => prod._id === idProduct );
+            console.log('index', indexCartProduct);
+            if (indexCartProduct === -1) {
+                const data = {
+                    isEmpty: true,
+                    message: `El producto no se encuentra en el carrito`,
+                    status: 500
+                };
+                return data;
+            } else {
+                productsInCart = await productsInCart.filter( el => el._id !== idProduct);
+                const cartTemplate = await productsInCart;
+                this.collection.doc(id).set({ _id: id, timestamp: cartByID[0].timestamp, products: productsInCart });
+                const data = {
+                    cartTemplate,
+                    isEmpty: !cartTemplate.length,
+                    message: `No hay productos seleccionados`,
+                    status: 200
+                }
+                return data;
+            }
+        } catch (error) {
+            console.log('No se puede borrar el producto', error);
+        }
+    }
 }
 
 export default ContainerFirebase;

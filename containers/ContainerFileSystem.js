@@ -24,6 +24,14 @@ class ContainerFileSystem {
         }
     }
 
+    async getId(data) {
+        try {
+            return await data[0]._id;
+        } catch (error) {
+            console.log('No se puede obtener ID')
+        }
+    }
+
     async addProduct(product) {
         try {
             const products = await this.getAll();

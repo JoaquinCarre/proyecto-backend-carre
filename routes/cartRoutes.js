@@ -1,13 +1,9 @@
 import { Router } from 'express';
-/* import ContainerFileSystem from '../containers/ContainerFileSystem.js'; */
 import {
     productDao as products,
     cartDao as cart
 } from '../daos/indexDao.js'
 
-/* const cart = new ContainerFileSystem('./dataBase/cart.json');
-const products = new ContainerFileSystem('./dataBase/products.json');
- */
 const router = Router()
 
 router.post('/', async (req, res, next) => {
@@ -34,6 +30,7 @@ router.get('/:id/productos', async (req, res, next) => {
     try {
         const { id } = req.params
         const cartByID = await cart.getByID(id);
+        console.log('cartbyid', cartByID)
         if (!cartByID.length) {
             const data = {
                 isEmpty: true,
@@ -57,11 +54,10 @@ router.get('/:id/productos', async (req, res, next) => {
 router.post('/:id/productos', async (req, res, next) => {
     try {
         const idProduct = req.body.id;
+        console.log('idProduct', idProduct)
         const product = await products.getByID(idProduct)
         console.log('esteproductoagrego: ', product)
         const { id } = req.params;
-        /* console.log('el mejor id: ', id) */
-        /* Ver como agregar el id con new ObjectId(id) para que lo lea en el contenedor */
         const data = await cart.addProductCart(id, product[0]);
         res.status(data.status).render('cart', data)
     } catch (error) {

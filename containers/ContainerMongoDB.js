@@ -11,6 +11,7 @@ class ContainerMongoDB {
 
     async getAll() {
         try {
+            //sacar data de acá
             console.log('Tratando de obtener productos');
             const allProducts = await this.collection.find({}).lean();
             console.log('allProducts', allProducts);
@@ -25,6 +26,14 @@ class ContainerMongoDB {
             return await this.collection.find({ _id: id }).lean();
         } catch (error) {
             console.log('No se puede obtener el producto solicitado', error);
+        }
+    }
+
+    async getId(data) {
+        try {
+            return await data[0]._id.toString();
+        } catch (error) {
+            console.log('No se puede obtener ID')
         }
     }
 
@@ -113,7 +122,6 @@ class ContainerMongoDB {
                 timestamp: Date.now(),
                 products: []
             });
-            console.log('id', result._id.toString());
             return result._id.toString();
         } catch (error) {
             console.log('No es posible crear el carrito', error);
@@ -139,6 +147,7 @@ class ContainerMongoDB {
                     isAdmin: true,
                     status: 200
                 }
+                console.log('Carrito eliminado!')
                 return data
             }
         } catch (error) {
@@ -148,11 +157,6 @@ class ContainerMongoDB {
 
     async addProductCart(id, product) {
         try {
-            const getCart = await this.getAll();
-            if (!getCart.length) {
-                console.log('Carrito nuevo creado');
-                await this.createCart();
-            }
             const cartByID = await this.getByID(id);
             if (!cartByID.length) {
                 const data = {
@@ -162,7 +166,6 @@ class ContainerMongoDB {
                 }
                 return data;
             } else {
-                //Ver como coincidir el id que viene como un string con el id del producto buscado, agregando new ObjectId
                 console.log('queproducto', product);
                 await this.collection.updateOne({ _id: id }, { $push: { products: product } });
                 const cartProducts = await this.collection.find({ _id: id }).lean();
@@ -191,7 +194,8 @@ class ContainerMongoDB {
                 }
                 return data;
             } else {
-                const isProduct = await this.carrito.findOne({ $and: [{ _id: id }, { "products": { _id: idProduct } }] }).lean();
+                /* const isProduct = await this.collection.findOne({ $and: [{ _id: id }, { products: { _id: idProduct } }] }).lean();
+                console.log('producto a borrar: ', isProduct);
                 if (!isProduct) {
                     const data = {
                         isEmpty: true,
@@ -199,17 +203,17 @@ class ContainerMongoDB {
                         status: 500
                     };
                     return data;
-                } else {
-                    const result = await this.carrito.updateOne({ _id: id }, { $unset: { "products": { _id: idProduct } } });
-                    const cartTemplate = await this.carrito.findOne({ _id: id }).lean();
-                    const data = {
-                        cartTemplate,
-                        isEmpty: !cartTemplate.length,
-                        message: `No hay productos seleccionados`,
-                        status: 200
-                    }
-                    return data;
+                } else { */
+                await this.collection.updateOne({ _id: id }, { $pull: { products: { _id: idProduct } }}); //Esta lógica borra todos los productos que cumplan con la condición, agregar a futuro un campo de cantidad del mismo producto en el carrito
+                const cartTemplate = await this.collection.findOne({ _id: id }).lean();
+                const data = {
+                    cartTemplate,
+                    isEmpty: !cartTemplate.length,
+                    message: `No hay productos seleccionados`,
+                    status: 200
                 }
+                return data;
+                /* } */
             }
         } catch (error) {
             console.log('No se puede borrar el producto', error);
