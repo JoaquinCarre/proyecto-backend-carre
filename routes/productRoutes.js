@@ -20,7 +20,6 @@ router.get('/', async (req, res, next) => {
     }
     const getIdCart = await cart.getId(cartJSON);
     const productsTemplate = productsJSON.map((prod) => ({ ...prod, isCart: isCartJSON, idCart: getIdCart }));
-    console.log('productos Templates: ', productsTemplate);
     try {
         const data = {
             isCart: isCartJSON,

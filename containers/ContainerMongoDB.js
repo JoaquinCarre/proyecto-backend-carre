@@ -11,10 +11,7 @@ class ContainerMongoDB {
 
     async getAll() {
         try {
-            //sacar data de acá
-            console.log('Tratando de obtener productos');
             const allProducts = await this.collection.find({}).lean();
-            console.log('allProducts', allProducts);
             return allProducts;
         } catch (error) {
             console.log('No es posible obtener los productos de la base de datos', error);
@@ -43,7 +40,6 @@ class ContainerMongoDB {
             const { title, description, price, thumbnail, stock } = product
             if (title && description && price && thumbnail && stock) {
                 const result = await this.collection.create(product)
-                console.log('resultado addProduct', result)
                 const productsTemplate = await result
                 const data = {
                     productsTemplate,
@@ -169,12 +165,10 @@ class ContainerMongoDB {
                 }
                 return data;
             } else {
-                console.log('queproducto', product);
                 await this.collection.updateOne({ _id: id }, { $push: { products: product } });
                 const cartProducts = await this.collection.find({ _id: id }).lean();
                 let cartTemplate = cartProducts[0].products;
                 cartTemplate = cartTemplate.map(el =>({...el, _id : el._id.toString()}));
-                console.log('añadiendo carttemplate', cartTemplate);
                 const data = {
                     cartTemplate,
                     isEmpty: !cartTemplate.length,
@@ -211,9 +205,7 @@ class ContainerMongoDB {
                 } else {
                 await this.collection.updateOne({ _id: id }, { $pull: { products: { _id: idProduct } }}); //Esta lógica borra todos los productos que cumplan con la condición, agregar a futuro un campo de cantidad del mismo producto en el carrito
                 let cartTemplate = await this.collection.findOne({ _id: id }).lean();
-                console.log('cartTemplate', cartTemplate)
                 cartTemplate = cartTemplate.products.map(el =>({...el, _id : el._id.toString()}))
-                console.log('cart cambiado', cartTemplate);
                 const data = {
                     cartTemplate,
                     isEmpty: !cartTemplate.length,
