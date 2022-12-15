@@ -1,36 +1,37 @@
-const express = require("express");
-const routers = require("./routers");
-const path = require("path");
-const handlebars = require("express-handlebars");
-const http = require("http");
-const { Server } = require("socket.io");
-const Contenedor = require('./contenedor');
+import express, { json, urlencoded } from 'express';
+import routers from './routers/index.js';
+import path, { join } from 'path';
+import { fileURLToPath } from 'url';
+import { create } from "express-handlebars";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import Contenedor from './contenedor.js';
+import ContenedorMensajes from './contenedorArchivosMensajes.js'
+import fakerRoutes from './routers/fakerProducts.js';
 
-const {
-  optionsSQLite,
-  createTableMessages,
-  optionsMySQL,
-  createTableProducts
-} = require('./db-config/createTables.js')
+import { initialMessages, optionsMySQL, createTableProducts } from './db-config/createTables.js';
 
 
 const app = express();
 
-const server = http.createServer(app);
+const server = createServer(app);
 
 const io = new Server(server);
 
-app.use("/", express.static(path.join(__dirname, "/public")));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use('/', express.static(join(__dirname, '/public')))
+app.use(json())
+app.use(urlencoded({ extended: true }))
 
-const hbs = handlebars.create();
+const hbs = create();
 app.engine("handlebars", hbs.engine);
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "handlebars");
 
 app.use("/", routers);
+app.use("/api/productos-test", fakerRoutes)
 
 app.use(function (err, req, res, next) {
   console.error(err.stack);
@@ -52,9 +53,9 @@ function setEvents() {
     })
 
     //CENTRO DE MENSAJES - CHAT
-    await createTableMessages();
-    const messages = new Contenedor(optionsSQLite, 'mensajes');
-    const dataMessages = await messages.getData();
+    await initialMessages();
+    const messages = new ContenedorMensajes();
+    const dataMessages = await messages.getMessage();
     socket.emit("history-messages", dataMessages);
     socket.on("chat message", async (data) => {
       console.log("data", data);

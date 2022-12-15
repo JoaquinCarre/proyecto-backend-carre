@@ -1,0 +1,22 @@
+[
+  {
+    "id": "messages",
+    "messages": [
+      {
+        "authors": {
+          "email": "Servidor@chat",
+          "name": "Servidor",
+          "lastname": "Chat",
+          "age": 0,
+          "alias": "Servidor",
+          "avatar": ""
+        },
+        "text": {
+          "id": "000000",
+          "message": "Bienvenidxs al Chat Público",
+          "date": "14/12/2022, 21:26:58"
+        }
+      }
+    ]
+  }
+]

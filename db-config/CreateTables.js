@@ -1,47 +1,41 @@
-const knex = require('knex');
-
-const optionsSQLite = {
-  client: 'sqlite3',
-  connection: {
-    filename: 'db/ecommerce.sqlite'
-  },
-  useNullAsDefault: true
-};
+import knex from 'knex';
+import { writeFile, readFile } from 'fs/promises';
 
 const messagesDefault = [
   {
-    email: "Servidor",
-    message: "Bienvenidxs al Chat público",
-    date: new Date().toLocaleString()
-  },
-];
-
-async function createTableMessages() {
-  const knexInstance = knex(optionsSQLite)
-  try {
-    const exist = await knexInstance.schema.hasTable('mensajes')
-    if (exist) {
-      console.log('La tabla mensajes ya existe.')
-      const messagesExist = await knexInstance('mensajes').select('*');
-        if (!messagesExist.length) {
-          const date = new Date();
-          await knexInstance('mensajes').insert(messagesDefault);
-          return
-        } else {
-          return
+    id: "messages",
+    messages: [
+      {
+        authors: {
+          email: "Servidor@chat",
+          name: "Servidor",
+          lastname: "Chat",
+          age: 0,
+          alias: "Servidor",
+          avatar: ""
+        },
+        text: {
+          id: "000000",
+          message: "Bienvenidxs al Chat Público",
+          date: new Date().toLocaleString()
         }
       }
-    await knexInstance.schema.createTable('mensajes', (table) => {
-      table.string('email', 15).notNullable()
-      table.string('message', 40).notNullable()
-      table.timestamp('date').notNullable()
-    })
-    console.log('Tabla mensajes creada.')
+    ]
+  }
+];
+
+async function initialMessages() {
+  try {
+    const messagesExist = await readFile('./public/messages.json', 'utf-8');
+    if (!messagesExist.length) {
+      await writeFile('./public/messages.json', JSON.stringify(messagesDefault, null, 2));
+      return
+    } else {
+      return
+    }
   } catch (error) {
     console.error("error", error.message)
     throw error
-  } finally {
-    knexInstance.destroy()
   }
 }
 
@@ -107,9 +101,8 @@ async function createTableMessages() {
     }
   }
 
-  module.exports = {
+  export {
     optionsMySQL,
     createTableProducts,
-    optionsSQLite,
-    createTableMessages
+    initialMessages,
   }

@@ -1,11 +1,7 @@
-const { Router } = require('express')
-const Contenedor = require('../contenedor');
+import { Router } from 'express';
+import Contenedor from '../contenedor.js';
 
-const {
-    optionsMySQL,
-    createTableProducts,
-    createTableMessages
-} = require('../db-config/createTables.js')
+import { optionsMySQL, createTableProducts, initialMessages } from '../db-config/createTables.js';
 
 const router = Router()
 
@@ -16,9 +12,9 @@ let productos = [];
 router.get('/', async (req, res, next) => {
     try {
         await createTableProducts();
-        await createTableMessages();
+        await initialMessages();
         const getProductos = await products.getData();
-        productos = await getProductos;
+        productos = getProductos;
         const data = {
             isEmpty: !productos.length
         };
@@ -82,4 +78,4 @@ router.delete('/:id', async (req, res) => {
 
 })
 
-module.exports = router
+export default router
