@@ -67,7 +67,7 @@ function showMessage(data) {
   const item = document.createElement("li");
   item.className = "list-group-item text-start";
   item.innerHTML =
-    `<strong style="color: blue">${data.authors.email}</strong> <font color="brown">${data.text.date}</font> : <i style="color: green">${data.text.message}</i>`;
+    `<strong style="color: blue">${data[0].messages.authors.email}</strong> <font color="brown">${data.text.date}</font> : <i style="color: green">${data.text.message}</i>`;
   message.appendChild(item);
 }
 
@@ -91,6 +91,7 @@ socket.on("history-messages", (data) => {
   console.log("historymessage", data)
   message.innerText = "";
   data.forEach(msg => {
+    console.log("mensaje: ", msg);
     showMessage(msg);
   });
 });
