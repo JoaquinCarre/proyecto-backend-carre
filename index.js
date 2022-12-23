@@ -56,8 +56,8 @@ function setEvents() {
     await initialMessages();
     const messages = new ContenedorMensajes();
     const dataMessages = await messages.getMessage();
-    console.log(dataMessages[0].messages.authors.email)
-    socket.emit("history-messages", dataMessages);
+    console.log(dataMessages);
+    socket.emit("history-messages", JSON.stringify(dataMessages));
     socket.on("chat message", async (data) => {
       console.log("data", data);
       messages.insertData(data);
