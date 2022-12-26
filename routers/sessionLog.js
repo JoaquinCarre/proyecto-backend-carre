@@ -4,11 +4,10 @@ const router = Router();
 
 function auth (req, res, next) {
   try {
-    const { isAuth } = req.session;
-    if (isAuth) {
+    const { admin } = req.session;
+    if (admin) {
       next();
     } else {
-      console.log("🚫 Acceso denegado 🚫");
       res.status(401).send('Error de autenticación');
     }
   }
@@ -20,7 +19,6 @@ function auth (req, res, next) {
 // Corrobora si hay sesión activa
 router.get('/login', auth, (req, res) => {
   try {
-    console.log('obteniendo login')
     res.status(200).json({ username: req.session.username });
   }
   catch (e) {
@@ -33,7 +31,7 @@ router.post('/login', (req, res) => {
   try {
     const { username } = req.body;
     req.session.username = username;
-    req.session.isAuth = true;
+    req.session.admin = true;
     console.log('username', username)
     res.status(200).json({ username });
   }
@@ -49,7 +47,7 @@ router.delete('/logout', auth, (req, res) => {
       if (!error) {
         res.status(202).end();
       } else {
-        res.status(500).json('Ha ocurrido un error.')
+        res.status(500).json('Ha ocurrido un error.', error);
       }
     });
   }

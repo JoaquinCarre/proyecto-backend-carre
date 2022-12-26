@@ -19,7 +19,7 @@ window.addEventListener('load', async () => {
     formToAddProduct.classList.remove('d-none');
     logoutDiv.classList.remove('d-none');
     loginDiv.classList.add('d-none');
-    userOutput.innerText = `Bienvenido ${username} !`;
+    userOutput.innerText = `Hola ${username}!`;
   }
   else {
     formToAddProduct.classList.add('d-none');
@@ -32,7 +32,6 @@ window.addEventListener('load', async () => {
 formLogin.addEventListener('submit', async (e) => {
   e.preventDefault();
   const inputValue = JSON.stringify({username: inputLogin.value});
-  console.log(inputValue)
   const userLog = await fetch("http://localhost:8010/login", {
     headers: {
       'Content-Type': 'application/json',
@@ -41,9 +40,10 @@ formLogin.addEventListener('submit', async (e) => {
     method: 'POST',
     body: inputValue
   });
-  console.log('userLog', userLog);
   if (userLog.status === 200) {
     let response = await userLog.json();
+    console.log('response');
+    console.log(response);
     username = response.username;
     formToAddProduct.classList.remove('d-none');
     logoutDiv.classList.remove('d-none');
@@ -75,7 +75,6 @@ const productPrice = document.getElementById('price_product');
 const productThumbnail = document.getElementById('url_product');
 
 function showProducts(data) {
-  console.log("show", data)
   const item = document.createElement("tr")
   item.innerHTML =
     `<td>${data.title}</td>
@@ -113,9 +112,7 @@ socket.on("history-products", (data) => {
   productPrice.value = "";
   productThumbnail.value = "";
   tableProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [US$]</th><th>Imagen</th></tr>";
-  console.log("history", data)
   data.forEach((prod) => {
-    console.log("each", data);
     showProducts(prod);
   });
 });
