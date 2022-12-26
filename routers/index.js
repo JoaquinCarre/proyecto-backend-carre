@@ -1,9 +1,12 @@
 import { Router } from 'express';
 import Contenedor from '../contenedor.js';
+import { router as sessionLog } from './sessionLog.js';
 
 import { optionsMySQL, createTableProducts, initialMessages } from '../db-config/createTables.js';
 
 const router = Router()
+
+router.use('/', sessionLog);
 
 const products = new Contenedor(optionsMySQL, 'productos');
 

@@ -6,11 +6,12 @@ import { create } from "express-handlebars";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import Contenedor from './contenedor.js';
-import ContenedorMensajes from './contenedorArchivosMensajes.js'
+/* import ContenedorMensajes from './contenedorArchivosMensajes.js' */
 import fakerRoutes from './routers/fakerProducts.js';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 
 import { initialMessages, optionsMySQL, createTableProducts } from './db-config/createTables.js';
-
 
 const app = express();
 
@@ -20,9 +21,24 @@ const io = new Server(server);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const advancedOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}
+
 app.use('/', express.static(join(__dirname, '/public')))
 app.use(json())
 app.use(urlencoded({ extended: true }))
+app.use(session({
+  store: MongoStore.create({
+    mongoUrl: `mongodb+srv://sessions:c8ng0KHkvS7xqhCB@cluster0.bubyuyn.mongodb.net/sessions?retryWrites=true&w=majority`,
+    mongoOptions: advancedOptions,
+    ttl: 60,
+  }),
+  secret: '3cdXVD4#s7s7',
+  resave: true,
+  saveUninitialized: true,
+}));
 
 const hbs = create();
 app.engine("handlebars", hbs.engine);
@@ -53,7 +69,7 @@ function setEvents() {
     })
 
     //CENTRO DE MENSAJES - CHAT
-    await initialMessages();
+    /* await initialMessages();
     const messages = new ContenedorMensajes();
     const dataMessages = await messages.getMessage();
     console.log(dataMessages);
@@ -62,7 +78,7 @@ function setEvents() {
       console.log("data", data);
       messages.insertData(data);
       io.sockets.emit("notification", data);
-    });
+    }); */
     socket.on("disconnect", () => {
       console.log("usuario desconectado");
     });

@@ -1,5 +1,71 @@
 const socket = io();
 
+//LOGUEO USUARIO
+const loginDiv = document.getElementById('login-div');
+const formLogin = document.getElementById('formLogin');
+const logoutDiv = document.getElementById('logout-div');
+const logoutBtn = document.getElementById('logoutBtn');
+const inputLogin = document.getElementById('loginUser');
+const userOutput = document.getElementById('userOutput');
+const formToAddProduct = document.getElementById('formAdd');
+let username = '';
+
+window.addEventListener('load', async () => {
+  const userLog = await fetch("http://localhost:8010/login");
+  if (userLog.status === 200) {
+    let response = await userLog.json();
+    console.log(response)
+    username = response.username;
+    formToAddProduct.classList.remove('d-none');
+    logoutDiv.classList.remove('d-none');
+    loginDiv.classList.add('d-none');
+    userOutput.innerText = `Bienvenido ${username} !`;
+  }
+  else {
+    formToAddProduct.classList.add('d-none');
+    logoutBtn.classList.add('d-none');
+    loginDiv.classList.remove('d-none');
+    userOutput.innerText = '';
+  }
+});
+
+formLogin.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const inputValue = JSON.stringify({username: inputLogin.value});
+  console.log(inputValue)
+  const userLog = await fetch("http://localhost:8010/login", {
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': inputValue.length
+    },
+    method: 'POST',
+    body: inputValue
+  });
+  console.log('userLog', userLog);
+  if (userLog.status === 200) {
+    let response = await userLog.json();
+    username = response.username;
+    formToAddProduct.classList.remove('d-none');
+    logoutDiv.classList.remove('d-none');
+    logoutBtn.classList.remove('d-none');
+    loginDiv.classList.add('d-none');
+    userOutput.innerText = `Hola ${username}!`;
+}
+})
+
+logoutBtn.addEventListener('click', async () => {
+  await fetch("http://localhost:8010/logout", {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'DELETE',
+  });
+  loginDiv.classList.remove('d-none');
+  logoutDiv.classList.add('d-none');
+  formToAddProduct.classList.add('d-none');
+
+})
+
 //AGREGAR PRODUCTOS
 const formProducts = document.getElementById("form_upload_product");
 const tableProducts = document.getElementById("tableProducts")
@@ -8,7 +74,7 @@ const productTitle = document.getElementById('name_product');
 const productPrice = document.getElementById('price_product');
 const productThumbnail = document.getElementById('url_product');
 
-function showProducts (data) {
+function showProducts(data) {
   console.log("show", data)
   const item = document.createElement("tr")
   item.innerHTML =
@@ -20,7 +86,7 @@ function showProducts (data) {
   tableProducts.appendChild(item);
 }
 
-formProducts.addEventListener("submit", function (e) {
+formProducts.addEventListener("submit", async function (e) {
   e.preventDefault()
   const title = productTitle.value;
   const price = productPrice.value;
@@ -31,6 +97,12 @@ formProducts.addEventListener("submit", function (e) {
       "price": price,
       "thumbnail": thumbnail
     })
+    await fetch("http://localhost:8010/", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+    });
   } else {
     alert('Completar los campos vacíos')
   }
@@ -56,7 +128,7 @@ socket.on("productosActualizados", (data) => {
   showProducts(data);
 })
 
-//CENTRO DE MENSAJES - CHAT
+/* //CENTRO DE MENSAJES - CHAT
 const message = document.getElementById("messages");
 const formChat = document.getElementById("form");
 const emailUser = document.getElementById("email_input");
@@ -99,4 +171,4 @@ socket.on("history-messages", (data) => {
 socket.on("notification", (data) => {
   console.log("noti", data)
   showMessage(data);
-});
+}); */
