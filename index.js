@@ -9,7 +9,10 @@ import Contenedor from './contenedor.js';
 /* import ContenedorMensajes from './contenedorArchivosMensajes.js' */
 import fakerRoutes from './routers/fakerProducts.js';
 import session from 'express-session';
-import MongoStore from 'connect-mongo';
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
+import UserModel from './models/user.js';
+import { isValidPassword, encryptPassword } from './utils/passwordUtils.js'
 
 import { initialMessages, optionsMySQL, createTableProducts } from './db-config/createTables.js';
 
@@ -30,15 +33,75 @@ app.use('/', express.static(join(__dirname, '/public')))
 app.use(json())
 app.use(urlencoded({ extended: true }))
 app.use(session({
-  store: MongoStore.create({
-    mongoUrl: `mongodb+srv://sessions:c8ng0KHkvS7xqhCB@cluster0.bubyuyn.mongodb.net/sessions?retryWrites=true&w=majority`,
-    mongoOptions: advancedOptions,
-    ttl: 60,
-  }),
   secret: '3cdXVD4#s7s7',
-  resave: true,
-  saveUninitialized: true,
+  cookie: {
+    httpOnly: false,
+    secure: false,
+    maxAge: 600000,
+  },
+  rolling: true,
+  resave: false,
+  saveUninitialized: false,
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use('sign-in', new LocalStrategy({
+  usernameField: 'email',
+}, (email, password, done) => {
+  UserModel.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        console.log(`User not foun with username ${email}`)
+        return done(null, false)
+      }
+      if (!isValidPassword(user, password)) {
+        console.log('Invalid Password')
+        return done(null, false)
+      }
+      return done(null, user)
+    })
+    .catch(error => {
+      console.log('Failed to sign in', error.message)
+      done(error)
+    })
+}))
+
+passport.use('sign-up', new LocalStrategy({
+  usernameField: 'email',
+  passReqToCallback: true,
+}, (req, email, password, done) => {
+  UserModel.findOne({ email })
+    .then(user => {
+      if (user) {
+        console.log(`User ${email} already exists.`)
+        return done(null, false)
+      }
+      const newUser = {
+        ...req.body,
+        password: encryptPassword(password)
+      }
+      UserModel.create(newUser)
+        .then(newUser => {
+          console.log(`User ${newUser.email} registration succesful.`)
+          done(null, newUser)
+        })
+    })
+    .catch(error => {
+      console.log('Error in saving user: ', error.message)
+      done(error)
+    })
+}))
+
+passport.serializeUser((user, done) => {
+  done(null, user._id)
+})
+
+passport.deserializeUser((_id, done) => {
+  UserModel.findOne({ _id })
+    .then(user => done(null, user))
+    .catch(done)
+})
 
 const hbs = create();
 app.engine("handlebars", hbs.engine);
