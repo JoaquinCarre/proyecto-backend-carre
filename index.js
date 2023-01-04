@@ -1,3 +1,4 @@
+import 'dotenv/config.js';
 import express, { json, urlencoded } from 'express';
 import routers from './routers/index.js';
 import path, { join } from 'path';
@@ -13,8 +14,10 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import UserModel from './models/user.js';
 import { isValidPassword, encryptPassword } from './utils/passwordUtils.js'
-
 import { initialMessages, optionsMySQL, createTableProducts } from './db-config/createTables.js';
+//Agregado para el desafío 14: importar params y randoms
+import params from './db-config/minimistConfig.js';
+import randoms from './api/randoms.js';
 
 const app = express();
 
@@ -24,10 +27,6 @@ const io = new Server(server);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const advancedOptions = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}
 
 app.use('/', express.static(join(__dirname, '/public')))
 app.use(json())
@@ -110,6 +109,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "handlebars");
 
 app.use("/", routers);
+app.use('/api', randoms);
 app.use("/api/productos-test", fakerRoutes)
 
 app.use(function (err, req, res, next) {
@@ -150,11 +150,12 @@ function setEvents() {
 
 setEvents()
 
-server.listen(process.env.PORT, () => {
+//Agregado para el desafío 14: params.port
+server.listen(params.port, () => {
   console.log(
-    `Servidor http esta escuchando en el puerto ${server.address().port}`
+    `Servidor http esta escuchando en el puerto ${params.port}`
   );
-  console.log(`http://localhost:${server.address().port}`);
+  console.log(`http://localhost:${params.port}`);
   console.log(`Environment:${process.env.ENV}`);
 });
 

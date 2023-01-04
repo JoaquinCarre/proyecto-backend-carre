@@ -27,6 +27,7 @@
     "express-session": "^1.17.3",
     "firebase-admin": "^11.4.0",
     "knex": "^2.3.0",
+    "minimist": "^1.2.7",
     "mongoose": "^6.8.2",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.20",
@@ -34,7 +35,7 @@
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "socket.io": "^4.5.2",
-    "sqlite3": "^5.1.2",
+    "sqlite3": "^5.1.4",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

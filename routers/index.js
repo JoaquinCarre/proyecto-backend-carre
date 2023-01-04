@@ -3,12 +3,13 @@ import Contenedor from '../contenedor.js';
 import { router as sessionLog } from './sessionLog.js';
 import auth from './auth.js';
 import users from './users.js';
+import info from './info.js';
 
 import { optionsMySQL, createTableProducts, initialMessages } from '../db-config/createTables.js';
 
 const router = Router()
 
-router.use('/', sessionLog);
+router.use('/', sessionLog, info);
 router.use('/auth', auth);
 router.use('/users', users);
 

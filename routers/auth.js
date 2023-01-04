@@ -13,7 +13,6 @@ router.post('/sign-in', passport.authenticate('sign-in'), (req, res) => {
     res.status(200).json({ message: `Bienvenido ${user.email}.` })
   }
   catch (err) {
-    console.log('fail to signin')
     console.log('Failed to sign in', err);
   }
 });
