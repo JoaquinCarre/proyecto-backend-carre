@@ -1,3 +1,4 @@
+//Agregado para el desafío 14:
 const randomNumbers = [];
 
 process.on("message", query => {
