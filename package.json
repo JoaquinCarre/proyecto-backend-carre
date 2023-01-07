@@ -11,14 +11,18 @@
     "dev:wait": "npx nodemon --exec 'node -r dotenv/config' app.js",
     "consigna1a": "nodemon app.js -p 8081 -m fork",
     "consigna1b": "nodemon app.js -p 8082 -m cluster",
+
     "consigna2a": "forever -w start app.js -p 8081 -m fork",
     "consigna2b": "forever -w start app.js -p 8082 -m cluster",
     "consigna2c": "forever list",
+
     "consigna3a": "pm2 start ./app.js --name='h1' --watch -- -p 8081",
     "consigna3b": "pm2 start ./app.js --name='h2' --watch -i max -- -p 8082",
     "consigna3c": "pm2 monit",
+
     "consigna4a": "pm2 start ./app.js --name='h1' -- -p 8081 -m cluster",
     "consigna4b": "pm2 start ./app.js --name='h2' -- -p 8080",
+    
     "consigna5a": "pm2 start ./app.js --name='h1'  -- -p 8080",
     "consigna5b": "pm2 start ./app.js --name='h2'  -- -p 8082",
     "consigna5c": "pm2 start ./app.js --name='h3'  -- -p 8083",
