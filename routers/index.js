@@ -4,6 +4,7 @@ import { router as sessionLog } from './sessionLog.js';
 import auth from './auth.js';
 import users from './users.js';
 import info from './info.js';
+import { logger } from "../logs/logger.js";
 
 import { optionsMySQL, createTableProducts, initialMessages } from '../db-config/createTables.js';
 
@@ -85,5 +86,16 @@ router.delete('/:id', async (req, res) => {
 
 
 })
+
+//resto de rutas inexistentes para que advierta con un warning
+router.get("*", (req, res, next) => {
+    try {
+        logger.warn(`Acceso a ruta inexistente ${req.originalUrl} con el método ${req.method}`);
+        res.redirect("/");
+    } catch (err) {
+        logger.error(`${err.message}`);
+        next(err);
+    }
+});
 
 export default router
