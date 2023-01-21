@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import config from '../db-config/mongoDBConfig.js';
+import config from '../config/mongoDB.js';
 
 const advancedOptions = {
     useNewUrlParser: true,
@@ -11,7 +11,13 @@ mongoose.connect(config.mongoDB.URI, advancedOptions);
 
 const user = new Schema({
     email: { type: String, require: true, unique: true, index: true, validate: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/ },
-    password: { type: String, require: true },
-}, { timestamps: true })
+    password: { type: String, required: true },
+    timestamp: { type: Date, default: Date.now },
+    name: { type: String, required: true },
+    age: { type: Number },
+    address: { type: String },
+    phone: { type: String },
+    avatar: { type: String }
+})
 
 export default mongoose.model('User', user);

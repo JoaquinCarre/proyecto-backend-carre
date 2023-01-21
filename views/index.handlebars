@@ -1,111 +1,148 @@
 <header>
-    <nav class="row p-3">
-        <div id="out-account" class="row">
-            <div class="col-lg-8 col-6"></div>
-            <div class="col-lg-2 col-3">
-                <button class="btn btn-success" id="signin-nav">Iniciar Sesión</button>
+    <nav class="navbar navbar-light bg-primary d-flex">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="./img/miniEquinoccioLudicoLogo.png" alt="logo Equinoccio Ludico" width="30" height="30"
+                    class="d-inline-block align-text-top ">
+                <div class="fw-bold p-1">Equinoccio Lúdico</div>
+            </a>
+            <div id="out-account" class="justify-content-start d-none">
+                <button id="nav-signin" class="btn btn-outline-dark btn-success fw-bold me-2"
+                    type="button">Login</button>
+                <button id="nav-signup" class="btn btn-outline-dark btn-secondary fw-bold"
+                    type="button">Registro</button>
             </div>
-            <div class="col-lg-2 col-3">
-                <button class="btn btn-warning" id="signup-nav">Crear Cuenta</button>
+            <div id="in-account" class="justify-content-start d-none d-flex">
+                <button id="nav-cart" class="btn btn-outline-dark btn-warning fw-bold me-2" type="button"><img
+                        src="https://cdn0.iconfinder.com/data/icons/iconoteka-stroke/24/iconoteka_shopping_cart__grocery_store_b_s-256.png"
+                        alt="carrito" width="20"></button>
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark dropdown-toggle me-2 fw-bold" type="button"
+                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div id="user-avatar" class="text-center"></div>
+                        <button id="nav-signout" class="text-center dropdown-item text-danger fw-bold me-2"
+                            type="button">Desconectar</button>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div id="in-account" class="row d-none">
-            <div class="col-lg-10 col-9"></div>
-            <div class="col-lg-2 col-3">
-                <button class="btn btn-danger" id="signout-nav">Desconectar</button>
+            <div id="loading-icon" class="justify-content-start d-none">
+                <img src="https://cdn2.iconfinder.com/data/icons/seo-and-website/100/SEO_setting_chart_gear-512.png"
+                    alt="loading" class="loading-icon">
             </div>
         </div>
     </nav>
 </header>
-<main>
-    <div id="no-account-div" class="text-center fs-1 bg-danger p-4">
-        <h2>Necesita loguearse o crear una cuenta para ingresar!</h2>
+<main class="text-center">
+    <div id="homeImage" class="container-fluid text-center mt-5 p-3">
+        <img src="./img/equinoccioLudicoLogo.png" width="400px" alt="home image">
     </div>
-    <div id="account-div" class="d-none">
-        <div class="bg-light p-3 border border-dark">
-            <div class="rounded bg-secondary mt-2 p-2">
-                <div id="auth-div">
-                    <form id="formAuth">
-                        <h2 id="signin-title" class="fs-bold">Inicio de Sesión</h2>
-                        <h2 id="signup-title">Registro de Cuenta</h2>
-                        <label for="email" class="form-label">Email:</label>
-                        <input type="email" name="email" class="form-control" id="email" required>
-                        <br />
-                        <label for="password" class="form-label">Contraseña:</label>
-                        <input type="text" name="password" class="form-control" id="password" required>
-                        <div class="mt-4 d-flex justify-content-center">
-                            <button type="submit" formaction="sign-in" id="signin-button"
-                                class="btn btn-success">Iniciar sesión</button>
-                            <button type="submit" formaction="sign-up" id="signup-button" class="btn btn-warning">Crear
-                                Cuenta</button>
-                        </div>
-                    </form>
-                </div>
-                <div id="output-div" class="d-none">
-                    <div>
-                        <output id="user-output" class="fs-2"></output>
-                        <button class="btn btn-success d-none" id="signin-registered-user-button">Iniciar Sesión</button>
+    <div id="signup-div" class="container-fluid p-3 d-none">
+        <div class="container p-3">
+            <form id="signup-form">
+                <div class="form-group">
+                    <h2 class="text-white fw-bold">Datos de la cuenta</h2>
+                    <div class="mb-3 text-start">
+                        <label for="email-signup" class="form-label text-white">E-mail</label>
+                        <input type="email" name="email" class="form-control" id="email-signup"
+                            aria-describedby="emailHelp">
+                        <div id="emailHelp" class="form-text">No compartiremos tu e-mail con nadie</div>
+                    </div>
+                    <div class="mb-3 text-start">
+                        <label for="password-signup" class="form-label text-white">Contraseña</label>
+                        <input type="password" name="password" class="form-control" id="password-signup">
                     </div>
                 </div>
-                <div id="auth-error" class="d-flex justify-content-center d-none">
-                    <h2 id="error-title"></h2>
-                    <button id="go-back-button" type="button" class="ms-3 btn btn-warning">Atrás</button>
+                <div class="form-group">
+                    <h2 class="text-white fw-bold">Datos personales</h2>
+                    <div class="mb-3 text-start">
+                        <label for="inputName" class="form-label text-white">Nombre</label>
+                        <input type="text" class="form-control" id="inputName">
+                    </div>
+                    <div class="mb-3 text-start">
+                        <label for="inputAddress" class="form-label text-white">Dirección</label>
+                        <input type="text" class="form-control" id="inputAddress">
+                    </div>
+                    <div class="mb-3 text-start">
+                        <label for="inputAge" class="form-label text-white">Edad</label>
+                        <input type="number" class="form-control" id="inputAge">
+                    </div>
+                    <div class="mb-3 text-start">
+                        <label for="inputPhone" class="form-label text-white">Teléfono</label>
+                        <input type="text" class="form-control" id="inputPhone">
+                    </div>
+                    <div class="mb-3 text-start">
+                        <label for="inputUploadFile" class="form-label text-white">Avatar</label>
+                        <input class="form-control" name="inputUploadFile" type="file" id="inputUploadFile">
+                    </div>
                 </div>
-            </div>
-            <div id="formAdd" class="d-none p-3">
-                <h2>Agregar un producto</h2>
-                <form id="form_upload_product" action="/" method="post">
-                    <label for="name_product">Nombre Producto</label>
-                    <input type="text" name="title" id="name_product">
-                    <br />
-                    <br />
-                    <label for="price_product">Precio Producto</label>
-                    <input type="text" name="price" id="price_product">
-                    <br />
-                    <br />
-                    <label for="url_product">URL Imagen Producto</label>
-                    <input type="text" name="thumbnail" id="url_product">
-                    <br />
-                    <br />
-                    <button type="submit" class="btn btn-success">Agregar</button>
-                </form>
-            </div>
+                <button type="submit" formaction="sign-up" class="btn btn-secondary">Registrarse</button>
+            </form>
         </div>
     </div>
-    <div>
+    <div id="signin-div" class="container-fluid p-3 d-none">
+        <div class="container p-3">
+            <form id="signin-form">
+                <div class="mb-3 text-start">
+                    <label for="email-signin" class="form-label text-white">E-mail</label>
+                    <input type="email" name="email" class="form-control" id="email-signin"
+                        aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text">No compartiremos tu e-mail con nadie</div>
+                </div>
+                <div class="mb-3 text-start">
+                    <label for="password-signin" class="form-label text-white">Contraseña</label>
+                    <input type="password" name="password" class="form-control" id="password-signin">
+                </div>
+                <button type="submit" formaction="sign-in" class="btn btn-success">Login</button>
+            </form>
+        </div>
+    </div>
+    <div id="output-div" class="d-none">
+        <div>
+            <output id="user-output" class="fs-2"></output>
+        </div>
+    </div>
+    <div id="auth-error" class="d-flex justify-content-center d-none">
+        <h2 id="error-title"></h2>
+        <button id="go-back-button" type="button" class="ms-3 btn btn-warning">Atrás</button>
+    </div>
+    <div id="form-add" class="d-none p-3">
+        <h2 class="text-white fw-bold">Agregar un producto</h2>
+        <form id="form_upload_product" action="/" method="post">
+            <label for="name_product" class="text-white">Nombre Producto</label>
+            <input type="text" name="title" id="name_product">
+            <br />
+            <br />
+            <label for="price_product" class="text-white">Precio Producto</label>
+            <input type="text" name="price" id="price_product">
+            <br />
+            <br />
+            <label for="url_product" class="text-white">URL Imagen Producto</label>
+            <input type="text" name="thumbnail" id="url_product">
+            <br />
+            <br />
+            <button type="submit" class="btn btn-success">Agregar</button>
+        </form>
+    </div>
+    <div id="products-table" class="text-white d-none">
         <h2>Productos</h2>
-        <table class="table" id="tableProducts">
+        <table class="table bg-white" id="tableProducts">
             <tr>
                 <th>Nombre</th>
                 <th>Precio [US$]</th>
                 <th>Imagen</th>
+                <th>Agregar al carrito</th>
             </tr>
             {{#if isEmpty}}
             <tr>
-                <td>No hay productos subidos</td>
+                <td colspan="4" class="text-white">No hay productos subidos</td>
             </tr>
             {{/if}}
         </table>
     </div>
-
-    {{!-- <div class="mt-3 bg-light p-3 border border-dark">
-        <h2>Centro de Mensajes</h2>
-        <div class="border border-primary m-3">
-            <ul id="messages" class="list-group"></ul>
-        </div>
-        <form id="form" action="" class="input-group">
-            <div class="input-group">
-                <input type="email" name="email" id="email_input" placeholder="email@email.com" class="form-control"
-                    required />
-            </div>
-            <div class="input-group">
-                <input class="form-control" id="msg_input" autocomplete="off" aria-describedby="button-addon1"
-                    placeholder="mensaje" />
-                <button class="btn btn-light btn-outline-dark" type="submit" id="button-addon1">Enviar</button>
-            </div>
-        </form>
-    </div> --}}
-
 </main>
-<script src="/socket.io/socket.io.js"></script>
-<script src="/index.js"></script>
+{{!--
+<footer>
+</footer>
+--}}
