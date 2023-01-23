@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import users from './users/users.js';
 import auth from './users/auth.js';
+import cart from './cart/cart.js';
 import ProductController from '../controller/productController.js'
 
 const router = Router();
 
 router.use('/users', users);
 router.use('/auth', auth);
+router.use('/cart', cart);
 
 router.get('/', async (req, res, next) => {
     try {

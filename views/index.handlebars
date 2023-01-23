@@ -1,19 +1,24 @@
 <header>
+    {{!-- NAVBAR --}}
     <nav class="navbar navbar-light bg-primary d-flex">
         <div class="container-fluid">
+            {{!-- LOGO --}}
             <a class="navbar-brand d-flex align-items-center" href="/">
                 <img src="./img/miniEquinoccioLudicoLogo.png" alt="logo Equinoccio Ludico" width="30" height="30"
                     class="d-inline-block align-text-top ">
                 <div class="fw-bold p-1">Equinoccio Lúdico</div>
             </a>
+            <button id="products-link-button" class="btn btn-link text-white fw-bold d-none text-decoration-none fs-4">Productos</button>
+            {{!-- BOTONES LOGIN + REGISTRO --}}
             <div id="out-account" class="justify-content-start d-none">
                 <button id="nav-signin" class="btn btn-outline-dark btn-success fw-bold me-2"
                     type="button">Login</button>
                 <button id="nav-signup" class="btn btn-outline-dark btn-secondary fw-bold"
                     type="button">Registro</button>
             </div>
+            {{!-- BOTONES CARRITO + USUARIO LOGUEADO --}}
             <div id="in-account" class="justify-content-start d-none d-flex">
-                <button id="nav-cart" class="btn btn-outline-dark btn-warning fw-bold me-2" type="button"><img
+                <button id="nav-cart" class="btn btn-outline-dark btn-warning fw-bold me-2 d-none" type="button"><img
                         src="https://cdn0.iconfinder.com/data/icons/iconoteka-stroke/24/iconoteka_shopping_cart__grocery_store_b_s-256.png"
                         alt="carrito" width="20"></button>
                 <div class="dropdown">
@@ -27,6 +32,7 @@
                     </div>
                 </div>
             </div>
+            {{!-- ICONO DE CARGA --}}
             <div id="loading-icon" class="justify-content-start d-none">
                 <img src="https://cdn2.iconfinder.com/data/icons/seo-and-website/100/SEO_setting_chart_gear-512.png"
                     alt="loading" class="loading-icon">
@@ -35,9 +41,11 @@
     </nav>
 </header>
 <main class="text-center">
+    {{!-- IMAGEN HOME LOGO --}}
     <div id="homeImage" class="container-fluid text-center mt-5 p-3">
         <img src="./img/equinoccioLudicoLogo.png" width="400px" alt="home image">
     </div>
+    {{!-- REGISTRO --}}
     <div id="signup-div" class="container-fluid p-3 d-none">
         <div class="container p-3">
             <form id="signup-form">
@@ -81,6 +89,7 @@
             </form>
         </div>
     </div>
+    {{!-- LOGIN --}}
     <div id="signin-div" class="container-fluid p-3 d-none">
         <div class="container p-3">
             <form id="signin-form">
@@ -98,15 +107,18 @@
             </form>
         </div>
     </div>
+    {{!-- OUTPUT --}}
     <div id="output-div" class="d-none">
         <div>
             <output id="user-output" class="fs-2"></output>
         </div>
     </div>
+    {{!-- ERROR DE AUTORIZACIÓN --}}
     <div id="auth-error" class="d-flex justify-content-center d-none">
         <h2 id="error-title"></h2>
         <button id="go-back-button" type="button" class="ms-3 btn btn-warning">Atrás</button>
     </div>
+    {{!-- FORMULARIO PARA AGREGAR UN NUEVO PRODUCTO --}}
     <div id="form-add" class="d-none p-3">
         <h2 class="text-white fw-bold">Agregar un producto</h2>
         <form id="form_upload_product" action="/" method="post">
@@ -125,6 +137,7 @@
             <button type="submit" class="btn btn-success">Agregar</button>
         </form>
     </div>
+    {{!-- LISTA DE PRODUCTOS --}}
     <div id="products-table" class="text-white d-none">
         <h2>Productos</h2>
         <table class="table bg-white" id="tableProducts">
@@ -140,6 +153,16 @@
             </tr>
             {{/if}}
         </table>
+    </div>
+    {{!-- CARRITO --}}
+    <div id="cart-div" class="d-none">
+        <h1 class="text-white">Carrito de Compras</h1>
+        <div id="table-container" class="bg-white">
+            <table id="table-cart-products" class="m-auto table table-borderless" border="2" align="center"></table>
+        </div>
+        <div id="buttons-cart">
+            
+        </div>
     </div>
 </main>
 {{!--

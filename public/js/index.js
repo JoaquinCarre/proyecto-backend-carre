@@ -1,6 +1,7 @@
 const socket = io();
 
 //NAVBAR
+const linkProducts = document.getElementById('products-link-button');
 const outAccount = document.getElementById('out-account');
 const selectSignInButton = document.getElementById('nav-signin');
 const selectSignUpButton = document.getElementById('nav-signup');
@@ -13,7 +14,6 @@ const userAvatar = document.getElementById('user-avatar');
 //HOME
 const homeImage = document.getElementById('homeImage');
 const formAdd = document.getElementById('form-add');
-const productsTable = document.getElementById('products-table');
 //LOGIN
 const signinDiv = document.getElementById('signin-div');
 const signinForm = document.getElementById('signin-form')
@@ -41,6 +41,13 @@ const goBackButton = document.getElementById('go-back-button');
 window.addEventListener('load', async () => {
     const userLog = await fetch("http://localhost:8080/users/me");
     loadingButtons.classList.remove('d-none');
+    const cartLog = await fetch("http://localhost:8080/cart");
+    const cart = await cartLog.json();
+    if (!cart.length) {
+        cartButton.classList.add('d-none');
+    } else {
+        cartButton.classList.remove('d-none');
+    }
     if (userLog.status === 200) {
         setTimeout(async () => {
             const user = await userLog.json();
@@ -49,6 +56,7 @@ window.addEventListener('load', async () => {
             userOutput.innerText = `Bienvenido ${user.email} !`;
             outAccount.classList.add('d-none');
             inAccount.classList.remove('d-none');
+            linkProducts.classList.remove('d-none');
             dropdownMenuButton.innerText = `${user.email}`;
             userAvatar.innerHTML = `<img src="./avatars/${user.avatar}" alt="avatar" width="50" height="50" class="rounded-circle">`;
             authErrorDiv.classList.add('d-none');
@@ -64,6 +72,7 @@ window.addEventListener('load', async () => {
             userOutput.innerText = '';
             outAccount.classList.remove('d-none');
             inAccount.classList.add('d-none');
+            linkProducts.classList.add('d-none');
             authErrorDiv.classList.add('d-none');
             homeImage.classList.remove('d-none');
             formAdd.classList.add('d-none');
@@ -104,6 +113,7 @@ signinForm.addEventListener('submit', async (event) => {
         let response = await responseFetch.json();
         outAccount.classList.add('d-none');
         inAccount.classList.remove('d-none');
+        linkProducts.classList.remove('d-none');
         outputDiv.classList.remove('d-none');
         outputDiv.classList.add('text-white');
         signinDiv.classList.add('d-none');
@@ -111,7 +121,7 @@ signinForm.addEventListener('submit', async (event) => {
         const userLog = await fetch("http://localhost:8080/users/me");
         const user = await userLog.json();
         dropdownMenuButton.innerText = `${user.email}`;
-        userAvatar.innerHTML = `<img src="./avatars/${user.avatar}" alt="avatar" width="50" height="50" class="rounded-circle">`;
+        userAvatar.innerHTML = `<img src="./avatars/avatar${user._id}.png" alt="avatar" width="50" height="50" class="rounded-circle">`;
         formAdd.classList.remove('d-none');
         productsTable.classList.remove('d-none');
     }
@@ -135,7 +145,7 @@ signupForm.addEventListener('submit', async (event) => {
         address: address.value,
         age: age.value,
         phone: phone.value,
-        avatar: file.name
+        avatar: 'avatar'
     };
     const dataJSON = JSON.stringify(data);
     let responseFetch = await fetch("http://localhost:8080/auth/sign-up", {
@@ -189,18 +199,18 @@ goBackButton.addEventListener('click', () => {
 });
 //Botón para Desconectarse de la sesión
 signOutButton.addEventListener('click', async () => {
-    /* formAddProduct.classList.add('d-none'); */
     const userOut = await fetch("http://localhost:8080/auth/sign-out", {
         headers: {
             'Content-Type': 'application/json'
         },
         method: 'POST',
     });
-    const response = await userOut.json();
+    const response = await userOut.json(); //Ver si esto me influye en algo o lo saco
     homeImage.classList.remove('d-none');
     outputDiv.classList.add('d-none');
     outAccount.classList.remove('d-none');
     inAccount.classList.add('d-none');
+    linkProducts.classList.add('d-none');
     authErrorDiv.classList.add('d-none');
     formAdd.classList.add('d-none');
     productsTable.classList.add('d-none');
@@ -213,9 +223,9 @@ avatar.addEventListener("change", function () {
 });
 
 //AGREGAR PRODUCTOS
+const productsTable = document.getElementById('products-table');
 const formProducts = document.getElementById("form_upload_product");
 const tableProducts = document.getElementById("tableProducts")
-
 const productTitle = document.getElementById('name_product');
 const productPrice = document.getElementById('price_product');
 const productThumbnail = document.getElementById('url_product');
@@ -229,7 +239,7 @@ function showProducts(data) {
       <img src=${data.thumbnail} alt="imagen ${data.title}" width="100px" />
     </td>
     <td>
-        <button id='addProduct${data._id}' class='btn btn-outline-success'>+</button>
+        <button id='addProduct${data._id}' onclick="addProductToCart('${data._id}')" class='btn btn-outline-success'>+</button>
     </td>`;
     tableProducts.appendChild(item);
 }
@@ -257,7 +267,7 @@ formProducts.addEventListener("submit", async function (e) {
 });
 
 socket.on("history-products", (data) => {
-    console.log('data',data)
+    console.log('data', data)
     productTitle.value = "";
     productPrice.value = "";
     productThumbnail.value = "";
@@ -273,4 +283,109 @@ socket.on("productosActualizados", (data) => {
     productThumbnail.value = "";
     console.log("update", data)
     showProducts(data);
+});
+
+//CARRITO
+//1° ver con fetch de get('cart/') si hay algún carrito. Si lo hay devolverá un id, si no lo hay devolverá undefined.
+//En ese caso se tienen dos caminos para cuando se quiera agregar un producto. Si hay id el POST va a 'cart/:id',
+//caso contrario, va el POST a '/' y crea un nuevo carrito al que le añade la data. Al crearse el carrito se crea el botón cart
+//2° Al clickear el boton cart lee la ruta get('cart/') y muestra el carrito en el index
+//3° Al clickear en el botón de borrado elimina el producto con ese ID
+//4° El carrito cuenta con dos botones, COMPRAR y ELIMINAR CARRITO.
+
+//cartButton
+
+const cartDiv = document.getElementById('cart-div');
+const cartProducts = document.getElementById('table-cart-products');
+const buttonsCart = document.getElementById('buttons-cart');
+//crear carrito o añadir un producto al carrito si ya está creado
+async function addProductToCart(id) {
+    const cartLog = await fetch("http://localhost:8080/cart");
+    const cart = await cartLog.json();
+    const productToAddLog = await fetch(`http://localhost:8080/${id}`);
+    const productToAdd = await productToAddLog.json();
+    if (!cart.length) {
+        let responseFetch = await fetch("http://localhost:8080/cart", {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        });
+        const newCart = await responseFetch.json();
+        alert(`Se crea nuevo carrito con el Id: ${newCart}`);
+        const dataJSON = JSON.stringify(productToAdd);
+        let addProductFetch = await fetch(`http://localhost:8080/cart/${newCart}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': dataJSON.length
+            },
+            method: 'POST',
+            body: dataJSON
+        });
+        if(addProductFetch.status===200) {
+            cartButton.classList.remove('d-none');
+        }
+    } else {
+        const dataJSON = JSON.stringify(productToAdd);
+        await fetch(`http://localhost:8080/cart/${cart[0]._id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': dataJSON.length
+            },
+            method: 'POST',
+            body: dataJSON
+        });
+        alert(`Nuevo producto '${productToAdd.title}' agregado al carrito`);
+    }
+}
+
+//mostrar carrito e imprimir productos
+function showProductsCart (data) {
+    const item = document.createElement("tr")
+    console.log('data', data);
+    item.innerHTML +=
+        `<td>${data.title}</td>
+    <td>${data.price}</td>
+    <td>
+      <img src=${data.thumbnail} alt="imagen ${data.title}" width="100px" />
+    </td>
+    <td>
+        <button id='deleteProduct${data._id}' onclick="deleteProductCart('${data._id}')" class='btn btn-outline-danger'>X</button>
+    </td>`;
+    cartProducts.appendChild(item);
+}
+
+async function deleteProductCart(product_id) {
+    const cartLog = await fetch("http://localhost:8080/cart");
+    const cart = await cartLog.json();
+    let responseFetch = await fetch(`http://localhost:8080/cart/${cart[0]._id}/${product_id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'DELETE'
+        });
+    if (responseFetch.status === 200) {
+        const cartLog = await fetch("http://localhost:8080/cart");
+        const cart = await cartLog.json();
+        cartProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [US$]</th><th>Imagen</th><th style='color:gray'>Eliminar Producto</th></tr>";
+        cart[0].products.forEach((prod) => {
+        showProductsCart(prod);
+    });
+    }
+    
+}
+
+cartButton.addEventListener('click', async () => {
+    productsTable.classList.add('d-none');
+    cartDiv.classList.remove('d-none');
+    const cartLog = await fetch("http://localhost:8080/cart");
+    const cart = await cartLog.json();  
+    console.log('carrito mostrar', cart[0].products);
+    cartProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [US$]</th><th>Imagen</th><th style='color:gray'>Eliminar Producto</th></tr>";
+    cart[0].products.forEach((prod) => {
+        showProductsCart(prod);
+    });
+    buttonsCart.innerHTML = `<button id='delete-cart-button' onclick='deleteCart('${cart[0]._id}')' class='btn btn-danger'>Eliminar Carrito</button>
+    <button id='buy-cart-button' onclick='buyCart('${cart[0]._id}')' class='btn btn-success'>Comprar</button>`;
+
 });
