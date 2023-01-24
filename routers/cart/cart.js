@@ -48,13 +48,20 @@ router.post('/:id', async (req, res, next) => {
     }
 })
 
-//FALTA MODIFICAR
+router.put('/:id', async (req, res, next) => {
+    const { id } = req.params;
+    const product = req.body;
+    const updateCart = await CartController.uploadQuantity(id, product);
+    console.log('update', updateCart);
+    res.status(200).json(updateCart);
+})
 
 router.delete('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         const deletedCart = await CartController.deleteCartById(id)
-        res.json(deletedCart);
+        console.log('deletedCart', deletedCart)
+        res.status(200).json(deletedCart);
     } catch (error) {
         next(error);
     }

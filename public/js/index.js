@@ -222,6 +222,12 @@ avatar.addEventListener("change", function () {
     console.log(file.name);
 });
 
+//Boton para linkear a la vista de productos
+linkProducts.addEventListener('click', async () => {
+    cartDiv.classList.add('d-none');
+    productsTable.classList.remove('d-none');
+})
+
 //AGREGAR PRODUCTOS
 const productsTable = document.getElementById('products-table');
 const formProducts = document.getElementById("form_upload_product");
@@ -271,7 +277,7 @@ socket.on("history-products", (data) => {
     productTitle.value = "";
     productPrice.value = "";
     productThumbnail.value = "";
-    tableProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [US$]</th><th>Imagen</th><th>Agregar al carrito</th></tr>";
+    tableProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [$]</th><th>Imagen</th><th>Agregar al carrito</th></tr>";
     data.forEach((prod) => {
         showProducts(prod);
     });
@@ -286,12 +292,7 @@ socket.on("productosActualizados", (data) => {
 });
 
 //CARRITO
-//1° ver con fetch de get('cart/') si hay algún carrito. Si lo hay devolverá un id, si no lo hay devolverá undefined.
-//En ese caso se tienen dos caminos para cuando se quiera agregar un producto. Si hay id el POST va a 'cart/:id',
-//caso contrario, va el POST a '/' y crea un nuevo carrito al que le añade la data. Al crearse el carrito se crea el botón cart
-//2° Al clickear el boton cart lee la ruta get('cart/') y muestra el carrito en el index
-//3° Al clickear en el botón de borrado elimina el producto con ese ID
-//4° El carrito cuenta con dos botones, COMPRAR y ELIMINAR CARRITO.
+//Agregar función a botón COMPRAR
 
 //cartButton
 
@@ -303,8 +304,10 @@ async function addProductToCart(id) {
     const cartLog = await fetch("http://localhost:8080/cart");
     const cart = await cartLog.json();
     const productToAddLog = await fetch(`http://localhost:8080/${id}`);
-    const productToAdd = await productToAddLog.json();
+    let productToAdd = await productToAddLog.json();
     if (!cart.length) {
+        productToAdd = { ...productToAdd, quantity: 1 };
+        console.log('se agrega el producto: ', productToAdd);
         let responseFetch = await fetch("http://localhost:8080/cart", {
             headers: {
                 'Content-Type': 'application/json'
@@ -322,36 +325,57 @@ async function addProductToCart(id) {
             method: 'POST',
             body: dataJSON
         });
-        if(addProductFetch.status===200) {
+        if (addProductFetch.status === 200) {
             cartButton.classList.remove('d-none');
         }
     } else {
-        const dataJSON = JSON.stringify(productToAdd);
-        await fetch(`http://localhost:8080/cart/${cart[0]._id}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': dataJSON.length
-            },
-            method: 'POST',
-            body: dataJSON
-        });
+        const cartLog = await fetch("http://localhost:8080/cart");
+        const cart = await cartLog.json();
+        let productIndex = cart[0].products.findIndex(prod => prod._id === productToAdd._id);
+        if (productIndex !== -1) {
+            console.log('1', productToAdd);
+            cart[0].products[productIndex].quantity += 1;
+            productToAdd = cart[0].products[productIndex];
+            console.log('2', productToAdd);
+            const dataJSON = JSON.stringify(productToAdd);
+            await fetch(`http://localhost:8080/cart/${cart[0]._id}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Content-Length': dataJSON.length
+                },
+                method: 'PUT',
+                body: dataJSON
+            });
+        } else {
+            productToAdd.quantity = 1;
+            const dataJSON = JSON.stringify(productToAdd);
+            await fetch(`http://localhost:8080/cart/${cart[0]._id}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Content-Length': dataJSON.length
+                },
+                method: 'POST',
+                body: dataJSON
+            });
+        }
         alert(`Nuevo producto '${productToAdd.title}' agregado al carrito`);
     }
 }
 
 //mostrar carrito e imprimir productos
-function showProductsCart (data) {
+function showProductsCart(data) {
     const item = document.createElement("tr")
     console.log('data', data);
     item.innerHTML +=
         `<td>${data.title}</td>
-    <td>${data.price}</td>
-    <td>
-      <img src=${data.thumbnail} alt="imagen ${data.title}" width="100px" />
-    </td>
-    <td>
-        <button id='deleteProduct${data._id}' onclick="deleteProductCart('${data._id}')" class='btn btn-outline-danger'>X</button>
-    </td>`;
+        <td>${data.price}</td>
+        <td>
+          <img src=${data.thumbnail} alt="imagen ${data.title}" width="100px" />
+        </td>
+        <td>${data.quantity}</td>
+        <td>
+            <button id='deleteProduct${data._id}' onclick="deleteProductCart('${data._id}')" class='btn btn-outline-danger'>X</button>
+        </td>`;
     cartProducts.appendChild(item);
 }
 
@@ -359,33 +383,61 @@ async function deleteProductCart(product_id) {
     const cartLog = await fetch("http://localhost:8080/cart");
     const cart = await cartLog.json();
     let responseFetch = await fetch(`http://localhost:8080/cart/${cart[0]._id}/${product_id}`, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: 'DELETE'
-        });
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'DELETE'
+    });
     if (responseFetch.status === 200) {
         const cartLog = await fetch("http://localhost:8080/cart");
         const cart = await cartLog.json();
-        cartProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [US$]</th><th>Imagen</th><th style='color:gray'>Eliminar Producto</th></tr>";
-        cart[0].products.forEach((prod) => {
-        showProductsCart(prod);
-    });
+        if (!cart[0].products.length) {
+            deleteCart(cart[0]._id);
+        } else {
+            cartProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [$]</th><th>Imagen</th><th>Cantidad</th><th style='color:gray'>Eliminar Producto</th></tr>";
+            cart[0].products.forEach((prod) => {
+                showProductsCart(prod);
+            });
+            let total = 0;
+            cart[0].products.forEach((prod) => {
+                total = total + prod.price * prod.quantity;
+            });
+            cartProducts.innerHTML += `<td colspan="4"></td><td class="fw-bold">Total: $${total} </td>`;
+        }
     }
-    
+}
+
+async function deleteCart(cart_id) {
+    let responseFetch = await fetch(`http://localhost:8080/cart/${cart_id}`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'DELETE'
+    });
+    console.log(responseFetch);
+    if (responseFetch.status === 200) {
+        cartDiv.classList.add('d-none');
+        productsTable.classList.remove('d-none');
+        cartButton.classList.add('d-none');
+    }
 }
 
 cartButton.addEventListener('click', async () => {
     productsTable.classList.add('d-none');
     cartDiv.classList.remove('d-none');
     const cartLog = await fetch("http://localhost:8080/cart");
-    const cart = await cartLog.json();  
+    const cart = await cartLog.json();
     console.log('carrito mostrar', cart[0].products);
-    cartProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [US$]</th><th>Imagen</th><th style='color:gray'>Eliminar Producto</th></tr>";
+    cartProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [$]</th><th>Imagen</th><th>Cantidad</th><th style='color:gray'>Eliminar Producto</th></tr>";
     cart[0].products.forEach((prod) => {
         showProductsCart(prod);
     });
-    buttonsCart.innerHTML = `<button id='delete-cart-button' onclick='deleteCart('${cart[0]._id}')' class='btn btn-danger'>Eliminar Carrito</button>
+    let total = 0;
+    cart[0].products.forEach((prod) => {
+        total = total + prod.price * prod.quantity;
+    });
+    cartProducts.innerHTML += `<td colspan="4"></td><td class="fw-bold">Total: $${total} </td>`;
+    buttonsCart.innerHTML = `<button id='delete-cart-button' onclick="deleteCart('${cart[0]._id}')" class='btn btn-danger'>Eliminar Carrito</button>
     <button id='buy-cart-button' onclick='buyCart('${cart[0]._id}')' class='btn btn-success'>Comprar</button>`;
 
 });
