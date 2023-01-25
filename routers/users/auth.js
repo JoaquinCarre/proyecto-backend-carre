@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import upload from '../../middlewares/multer.js';
+import { sendMail } from '../../utils/emailUtils.js'
 
 const router = Router();
 
@@ -39,6 +40,16 @@ router.post('/sign-out', (req, res, next) => {
 
 router.post('/sign-up', upload, passport.authenticate('sign-up'), (req, res) => {
   const { user } = req;
+  const bodyHTML = `Se registró un nuevo usuario con los siguientes datos:
+  <ul>
+  <li>Usuario: ${user.email}</li>
+  <li>Nombre: ${user.name}</li>
+  <li>Edad: ${user.age}</li>
+  <li>Dirección: ${user.address}</li>
+  <li>Teléfono: ${user.phone}</li>
+  <li>Hora de registro: ${user.timestamp}</li>
+  </ul>`;
+  sendMail(`Usuario ${user.email} se registró.`, bodyHTML, 'joa.carre21@gmail.com');
   res.json({ message: `Usuario ${user.email} se registró.` });
 })
 

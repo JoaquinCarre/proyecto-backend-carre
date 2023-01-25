@@ -293,9 +293,6 @@ socket.on("productosActualizados", (data) => {
 
 //CARRITO
 //Agregar función a botón COMPRAR
-
-//cartButton
-
 const cartDiv = document.getElementById('cart-div');
 const cartProducts = document.getElementById('table-cart-products');
 const buttonsCart = document.getElementById('buttons-cart');
@@ -436,8 +433,26 @@ cartButton.addEventListener('click', async () => {
     cart[0].products.forEach((prod) => {
         total = total + prod.price * prod.quantity;
     });
+    const userLog = await fetch("http://localhost:8080/users/me");
+    const user = await userLog.json();
     cartProducts.innerHTML += `<td colspan="4"></td><td class="fw-bold">Total: $${total} </td>`;
     buttonsCart.innerHTML = `<button id='delete-cart-button' onclick="deleteCart('${cart[0]._id}')" class='btn btn-danger'>Eliminar Carrito</button>
-    <button id='buy-cart-button' onclick='buyCart('${cart[0]._id}')' class='btn btn-success'>Comprar</button>`;
-
+    <button id='buy-cart-button' onclick="buyCart('${cart[0]._id}', '${user._id}')" class='btn btn-success'>Comprar</button>`;
 });
+
+async function buyCart(cart_id, user_id) {
+    let responseFetch = await fetch(`http://localhost:8080/cart/${cart_id}/${user_id}`, {
+        method: 'POST'
+    });
+    console.log('Realizando la compra');
+    if (responseFetch.status === 200) {
+        console.log('Borrando Carrito por compra exitosa');
+        await deleteCart(cart_id);
+        outputDiv.classList.remove('d-none');
+        userOutput.innerText = 'Gracias por tu compra! Sigue viendo el catálogo de nuestros productos';
+        setTimeout(() => {
+            outputDiv.classList.add('d-none');
+        }, 3000);
+    }
+    
+}
