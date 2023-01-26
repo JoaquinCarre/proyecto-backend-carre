@@ -68,9 +68,9 @@ if (ENABLE_CLUSTER && cluster.isPrimary) {
 
     setEvents();
 
-    const PORT = 8080;
+    const PORT = process.env.PORT || 8080;
 
-    server.listen(PORT, () => {
+    server.listen(PORT, '0.0.0.0', () => {
         logger.info(
             `Servidor http esta escuchando en el puerto ${PORT}`
         );
