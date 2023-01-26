@@ -2,6 +2,7 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import UserModel from '../models/user.js';
 import { isValidPassword, encryptPassword } from '../utils/passwordUtils.js'
+import { logger } from "../logs/logger.js";
 
 function initPassport() {
     passport.use('sign-in', new LocalStrategy({
@@ -10,18 +11,20 @@ function initPassport() {
         UserModel.findOne({ email })
             .then((user) => {
                 if (!user) {
-                    console.log(`User not found with username ${email}`)
-                    return done(null, false)
+                    logger.warn(`Fallo en el login: usuario no encontrado con el username ${email}`);
+                    return done(null, false);
                 }
                 if (!isValidPassword(user, password)) {
-                    console.log('Invalid Password')
-                    return done(null, false)
+                    logger.warn(`Contraseña inválida`);
+                    return done(null, false);
                 }
-                return done(null, user)
+                logger.info(`${email} acaba de loguearse`);
+                return done(null, user);
             })
-            .catch(error => {
-                console.log('Failed to sign in', error.message)
-                done(error)
+            .catch(err => {
+                logger.error(`No ha sido posible loguearse:
+                ${err.message}`);
+                done(err)
             })
     }))
 
@@ -32,8 +35,8 @@ function initPassport() {
         UserModel.findOne({ email })
             .then(user => {
                 if (user) {
-                    console.log(`User ${email} already exists.`)
-                    return done(null, false)
+                    logger.warn(`Fallo en el registro: el usuario con el username ${email} ya existe`);
+                    return done(null, false);
                 }
                 const newUser = {
                     ...req.body,
@@ -41,13 +44,14 @@ function initPassport() {
                 }
                 UserModel.create(newUser)
                     .then(newUser => {
-                        console.log(`User ${newUser.email} registration succesful.`)
+                        logger.info(`Usuario con el username ${newUser.email} registrado exitosamente`);
                         done(null, newUser)
                     })
             })
-            .catch(error => {
-                console.log('Error in saving user: ', error.message)
-                done(error)
+            .catch(err => {
+                logger.error(`No ha sido posible registrar el usuario:
+                ${err.message}`);
+                done(err);
             })
     }))
 

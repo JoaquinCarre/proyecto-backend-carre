@@ -1,0 +1,14 @@
+{"level":"warn","message":"Acceso a ruta inexistente /carmen/829/12 con el método GET"}
+{"level":"error","message":"Cast to ObjectId failed for value \"carmen\" (type string) at path \"_id\" for model \"Product\""}
+{"level":"error","message":"Cast to ObjectId failed for value \"carmen\" (type string) at path \"_id\" for model \"Product\""}
+{"level":"warn","message":"Acceso a ruta inexistente /carmen/12/897 con el método GET"}
+{"level":"warn","message":"El usuario undefined no está autenticado para entrar"}
+{"level":"error","message":"logger.indo is not a function"}
+{"level":"warn","message":"Acceso a ruta inexistente /avatars/avatar con el método GET"}
+{"level":"error","message":"logger.indo is not a function"}
+{"level":"warn","message":"Acceso a ruta inexistente /avatars/avatar con el método GET"}
+{"level":"error","message":"No ha sido posible desloguearse de la cuenta:\n      Cannot read properties of undefined (reading 'email')"}
+{"level":"warn","message":"Acceso a ruta inexistente /avatars/avatar63d1c8d1cc40a1c6cee1f30c.png con el método GET"}
+{"level":"error","message":"Product validation failed: title: Path `title` is required."}
+{"level":"error","message":"Cast to ObjectId failed for value \"sadsa\" (type string) at path \"_id\" for model \"Product\""}
+{"level":"warn","message":"Fallo en el login: usuario no encontrado con el username admin@admin.com"}

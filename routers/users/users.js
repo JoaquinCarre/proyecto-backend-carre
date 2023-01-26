@@ -1,5 +1,6 @@
-import { Router } from 'express'
-import UserController from '../../controller/userController.js'
+import { Router } from 'express';
+import UserController from '../../controller/userController.js';
+import { logger } from "../../logs/logger.js";
 
 const router = Router()
 
@@ -30,8 +31,9 @@ router.get('/me', auth, verifyAuth, async (req, res, next) => {
   try {
     const user = await UserController.getByid(req.user._id)
     res.json(user)
-  } catch (error) {
-    next(error)
+  } catch (err) {
+    logger.error(`${err.message}`);
+    next(err)
   }
 })
 
@@ -40,8 +42,9 @@ router.post('/', async (req, res, next) => {
     const { body } = req
     const user = await UserController.create(body)
     res.json(user)
-  } catch (error) {
-    next(error)
+  } catch (err) {
+    logger.error(`${err.message}`);
+    next(err)
   }
 })
 
@@ -50,8 +53,9 @@ router.get('/', async (req, res, next) => {
     const { query = {} } = req
     const users = await UserController.get(query)
     res.json(users)
-  } catch (error) {
-    next(error)
+  } catch (err) {
+    logger.error(`${err.message}`);
+    next(err)
   }
 })
 
@@ -63,8 +67,9 @@ router.get('/:id', async (req, res, next) => {
       return res.status(404).end()
     }
     res.json(user)
-  } catch (error) {
-    next(error)
+  } catch (err) {
+    logger.error(`${err.message}`);
+    next(err)
   }
 })
 
@@ -76,8 +81,9 @@ router.put('/:id', async (req, res, next) => {
       return res.status(404).end()
     }
     res.status(204).end()
-  } catch (error) {
-    next(error)
+  } catch (err) {
+    logger.error(`${err.message}`);
+    next(err)
   }
 })
 
@@ -89,9 +95,10 @@ router.delete('/:id', async (req, res, next) => {
       return res.status(404).end()
     }
     res.status(204).end()
-  } catch (error) {
-    next(error)
-  }
+  } catch (err) {
+    logger.error(`${err.message}`);
+    next(err)
+  }err
 })
 
 export default router

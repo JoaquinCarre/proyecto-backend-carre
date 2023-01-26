@@ -2,7 +2,8 @@ import { Router } from 'express';
 import users from './users/users.js';
 import auth from './users/auth.js';
 import cart from './cart/cart.js';
-import ProductController from '../controller/productController.js'
+import ProductController from '../controller/productController.js';
+import { logger } from "../logs/logger.js";
 
 const router = Router();
 
@@ -18,9 +19,9 @@ router.get('/', async (req, res, next) => {
             isEmpty: !products.length
         };
         res.render('index', data);
-        //ver como adherir data con .then luego de que carguen los productos, para que no aparezca el cartel que no hay productos
-    } catch (error) {
-        next(error);
+    } catch (err) {
+        logger.error(`${err.message}`);
+        next(err);
     }
 });
 
@@ -29,10 +30,11 @@ router.post('/', async (req, res, next) => {
         const { body } = req
         const product = await ProductController.create(body)
         res.json(product)
-    } catch (error) {
-        next(error)
+    } catch (err) {
+        logger.error(`${err.message}`);
+        next(err)
     }
-})
+});
 
 router.get('/:id', async (req, res, next) => {
     try {
@@ -42,8 +44,9 @@ router.get('/:id', async (req, res, next) => {
             return res.status(404).end()
         }
         res.json(product)
-    } catch (error) {
-        next(error)
+    } catch (err) {
+        logger.error(`${err.message}`);
+        next(err)
     }
 })
 
@@ -55,10 +58,11 @@ router.put('/:id', async (req, res, next) => {
             return res.status(404).end()
         }
         res.status(204).end()
-    } catch (error) {
-        next(error)
+    } catch (err) {
+        logger.error(`${err.message}`);
+        next(err)
     }
-})
+});
 
 router.delete('/:id', async (req, res, next) => {
     try {
@@ -68,9 +72,20 @@ router.delete('/:id', async (req, res, next) => {
             return res.status(404).end()
         }
         res.status(204).end()
-    } catch (error) {
-        next(error)
+    } catch (err) {
+        logger.error(`${err.message}`);
+        next(err)
     }
-})
+});
+
+router.get("*", (req, res, next) => {
+    try {
+        logger.warn(`Acceso a ruta inexistente ${req.originalUrl} con el método ${req.method}`);
+        res.redirect("/");
+    } catch (err) {
+        logger.error(`${err.message}`);
+        next(err);
+    }
+});
 
 export default router;

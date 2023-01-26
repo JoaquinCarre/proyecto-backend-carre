@@ -36,7 +36,8 @@
     "passport-local": "^1.0.0",
     "socket.io": "^4.5.4",
     "twilio": "^3.84.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "winston": "^3.8.2"
   },
   "devDependencies": {
     "dotenv": "^16.0.3"

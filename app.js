@@ -14,6 +14,7 @@ import indexRouter from './routers/indexRouter.js';
 import os from "os";
 import cluster from "cluster";
 import minimist from 'minimist';
+import { logger } from './logs/logger.js';
 
 const argv = minimist(process.argv.slice(2), {
     default: { cluster: false },
@@ -36,7 +37,7 @@ if (ENABLE_CLUSTER && cluster.isPrimary) {
         cluster.fork();
     }
     cluster.on('exit', (worker, code, signal) => {
-        console.log(`worker ${worker.process.pid} died`);
+        logger.info(`worker ${worker.process.pid} died`);
     });
 } else {
     app.use('/', express.static(join(__dirname, '/public')));
@@ -70,12 +71,12 @@ if (ENABLE_CLUSTER && cluster.isPrimary) {
     const PORT = 8080;
 
     server.listen(PORT, () => {
-        console.log(
+        logger.info(
             `Servidor http esta escuchando en el puerto ${PORT}`
         );
-        console.log(`http://localhost:${PORT}`);
-        console.log(`Environment:${process.env.ENV}`);
+        logger.info(`http://localhost:${PORT}`);
+        logger.info(`Environment:${process.env.ENV}`);
     });
 
-    server.on("error", (error) => console.log(`Error en servidor ${error}`));
+    server.on("error", (error) => logger.error(`Error en servidor ${error}`));
 }
