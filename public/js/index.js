@@ -39,9 +39,9 @@ const goBackButton = document.getElementById('go-back-button');
 
 //Carga de la página
 window.addEventListener('load', async () => {
-    const userLog = await fetch("http://localhost:8080/users/me");
+    const userLog = await fetch("https://proyecto-backend-carre-production.up.railway.app/users/me");
     loadingButtons.classList.remove('d-none');
-    const cartLog = await fetch("http://localhost:8080/cart");
+    const cartLog = await fetch("https://proyecto-backend-carre-production.up.railway.app/cart");
     const cart = await cartLog.json();
     if (!cart.length) {
         cartButton.classList.add('d-none');
@@ -101,7 +101,7 @@ signinForm.addEventListener('submit', async (event) => {
         password: passwordSignin.value
     };
     const dataJSON = JSON.stringify(data);
-    let responseFetch = await fetch("http://localhost:8080/auth/sign-in", {
+    let responseFetch = await fetch("https://proyecto-backend-carre-production.up.railway.app/auth/sign-in", {
         headers: {
             'Content-Type': 'application/json',
             'Content-Length': dataJSON.length
@@ -118,7 +118,7 @@ signinForm.addEventListener('submit', async (event) => {
         outputDiv.classList.add('text-white');
         signinDiv.classList.add('d-none');
         userOutput.innerText = response.message;
-        const userLog = await fetch("http://localhost:8080/users/me");
+        const userLog = await fetch("https://proyecto-backend-carre-production.up.railway.app/users/me");
         const user = await userLog.json();
         dropdownMenuButton.innerText = `${user.email}`;
         userAvatar.innerHTML = `<img src="./avatars/avatar${user._id}.png" alt="avatar" width="50" height="50" class="rounded-circle">`;
@@ -148,7 +148,7 @@ signupForm.addEventListener('submit', async (event) => {
         avatar: 'avatar'
     };
     const dataJSON = JSON.stringify(data);
-    let responseFetch = await fetch("http://localhost:8080/auth/sign-up", {
+    let responseFetch = await fetch("https://proyecto-backend-carre-production.up.railway.app/auth/sign-up", {
         headers: {
             'Content-Type': 'application/json',
             'Content-Length': dataJSON.length
@@ -163,7 +163,7 @@ signupForm.addEventListener('submit', async (event) => {
         method: 'POST',
         body: formData
     };
-    fetch("http://localhost:8080/auth/sign-up", options)
+    fetch("https://proyecto-backend-carre-production.up.railway.app/auth/sign-up", options)
         .then(response => response.json())
         .then(data => {
             console.log(data);
@@ -199,7 +199,7 @@ goBackButton.addEventListener('click', () => {
 });
 //Botón para Desconectarse de la sesión
 signOutButton.addEventListener('click', async () => {
-    const userOut = await fetch("http://localhost:8080/auth/sign-out", {
+    const userOut = await fetch("https://proyecto-backend-carre-production.up.railway.app/auth/sign-out", {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -261,7 +261,7 @@ formProducts.addEventListener("submit", async function (e) {
             "price": price,
             "thumbnail": thumbnail
         })
-        await fetch("http://localhost:8080/", {
+        await fetch("https://proyecto-backend-carre-production.up.railway.app/", {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -298,14 +298,14 @@ const cartProducts = document.getElementById('table-cart-products');
 const buttonsCart = document.getElementById('buttons-cart');
 //crear carrito o añadir un producto al carrito si ya está creado
 async function addProductToCart(id) {
-    const cartLog = await fetch("http://localhost:8080/cart");
+    const cartLog = await fetch("https://proyecto-backend-carre-production.up.railway.app/cart");
     const cart = await cartLog.json();
-    const productToAddLog = await fetch(`http://localhost:8080/${id}`);
+    const productToAddLog = await fetch(`https://proyecto-backend-carre-production.up.railway.app/${id}`);
     let productToAdd = await productToAddLog.json();
     if (!cart.length) {
         productToAdd = { ...productToAdd, quantity: 1 };
         console.log('se agrega el producto: ', productToAdd);
-        let responseFetch = await fetch("http://localhost:8080/cart", {
+        let responseFetch = await fetch("https://proyecto-backend-carre-production.up.railway.app/cart", {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -314,7 +314,7 @@ async function addProductToCart(id) {
         const newCart = await responseFetch.json();
         alert(`Se crea nuevo carrito con el Id: ${newCart}`);
         const dataJSON = JSON.stringify(productToAdd);
-        let addProductFetch = await fetch(`http://localhost:8080/cart/${newCart}`, {
+        let addProductFetch = await fetch(`https://proyecto-backend-carre-production.up.railway.app/cart/${newCart}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Content-Length': dataJSON.length
@@ -326,7 +326,7 @@ async function addProductToCart(id) {
             cartButton.classList.remove('d-none');
         }
     } else {
-        const cartLog = await fetch("http://localhost:8080/cart");
+        const cartLog = await fetch("https://proyecto-backend-carre-production.up.railway.app/cart");
         const cart = await cartLog.json();
         let productIndex = cart[0].products.findIndex(prod => prod._id === productToAdd._id);
         if (productIndex !== -1) {
@@ -335,7 +335,7 @@ async function addProductToCart(id) {
             productToAdd = cart[0].products[productIndex];
             console.log('2', productToAdd);
             const dataJSON = JSON.stringify(productToAdd);
-            await fetch(`http://localhost:8080/cart/${cart[0]._id}`, {
+            await fetch(`https://proyecto-backend-carre-production.up.railway.app/cart/${cart[0]._id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Content-Length': dataJSON.length
@@ -346,7 +346,7 @@ async function addProductToCart(id) {
         } else {
             productToAdd.quantity = 1;
             const dataJSON = JSON.stringify(productToAdd);
-            await fetch(`http://localhost:8080/cart/${cart[0]._id}`, {
+            await fetch(`https://proyecto-backend-carre-production.up.railway.app/cart/${cart[0]._id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Content-Length': dataJSON.length
@@ -377,16 +377,16 @@ function showProductsCart(data) {
 }
 
 async function deleteProductCart(product_id) {
-    const cartLog = await fetch("http://localhost:8080/cart");
+    const cartLog = await fetch("https://proyecto-backend-carre-production.up.railway.app/cart");
     const cart = await cartLog.json();
-    let responseFetch = await fetch(`http://localhost:8080/cart/${cart[0]._id}/${product_id}`, {
+    let responseFetch = await fetch(`https://proyecto-backend-carre-production.up.railway.app/cart/${cart[0]._id}/${product_id}`, {
         headers: {
             'Content-Type': 'application/json'
         },
         method: 'DELETE'
     });
     if (responseFetch.status === 200) {
-        const cartLog = await fetch("http://localhost:8080/cart");
+        const cartLog = await fetch("https://proyecto-backend-carre-production.up.railway.app/cart");
         const cart = await cartLog.json();
         if (!cart[0].products.length) {
             deleteCart(cart[0]._id);
@@ -405,7 +405,7 @@ async function deleteProductCart(product_id) {
 }
 
 async function deleteCart(cart_id) {
-    let responseFetch = await fetch(`http://localhost:8080/cart/${cart_id}`, {
+    let responseFetch = await fetch(`https://proyecto-backend-carre-production.up.railway.app/cart/${cart_id}`, {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -422,7 +422,7 @@ async function deleteCart(cart_id) {
 cartButton.addEventListener('click', async () => {
     productsTable.classList.add('d-none');
     cartDiv.classList.remove('d-none');
-    const cartLog = await fetch("http://localhost:8080/cart");
+    const cartLog = await fetch("https://proyecto-backend-carre-production.up.railway.app/cart");
     const cart = await cartLog.json();
     console.log('carrito mostrar', cart[0].products);
     cartProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [$]</th><th>Imagen</th><th>Cantidad</th><th style='color:gray'>Eliminar Producto</th></tr>";
@@ -433,7 +433,7 @@ cartButton.addEventListener('click', async () => {
     cart[0].products.forEach((prod) => {
         total = total + prod.price * prod.quantity;
     });
-    const userLog = await fetch("http://localhost:8080/users/me");
+    const userLog = await fetch("https://proyecto-backend-carre-production.up.railway.app/users/me");
     const user = await userLog.json();
     cartProducts.innerHTML += `<td colspan="4"></td><td class="fw-bold">Total: $${total} </td>`;
     buttonsCart.innerHTML = `<button id='delete-cart-button' onclick="deleteCart('${cart[0]._id}')" class='btn btn-danger'>Eliminar Carrito</button>
@@ -441,7 +441,7 @@ cartButton.addEventListener('click', async () => {
 });
 
 async function buyCart(cart_id, user_id) {
-    let responseFetch = await fetch(`http://localhost:8080/cart/${cart_id}/${user_id}`, {
+    let responseFetch = await fetch(`https://proyecto-backend-carre-production.up.railway.app/cart/${cart_id}/${user_id}`, {
         method: 'POST'
     });
     console.log('Realizando la compra');
