@@ -1,7 +1,7 @@
 //Agregado para el desafío 14:
 import { Router } from 'express';
 import { fork } from 'child_process';
-import params from '../db-config/minimistConfig.js';
+import params from '../config/minimistConfig.js';
 
 const { PORT, MODE } = params;
 

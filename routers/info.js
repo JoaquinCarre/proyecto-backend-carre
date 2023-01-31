@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import params from '../db-config/minimistConfig.js';
+import params from '../config/minimistConfig.js';
 import path from 'path';
 import os from "os";
 import compression from 'compression';

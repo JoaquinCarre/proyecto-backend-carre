@@ -6,7 +6,7 @@ import users from './users.js';
 import info from './info.js';
 import { logger } from "../logs/logger.js";
 
-import { optionsMySQL, createTableProducts, initialMessages } from '../db-config/createTables.js';
+import { optionsMySQL, createTableProducts, initialMessages } from '../config/createTables.js';
 
 const router = Router()
 

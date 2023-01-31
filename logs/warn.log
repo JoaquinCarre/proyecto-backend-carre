@@ -1,2 +1,8 @@
 {"level":"warn","message":"Acceso a ruta inexistente /asdas/assa con el método GET"}
 {"level":"warn","message":"Acceso a ruta inexistente /dsad/saddsad/asd con el método GET"}
+{"level":"warn","message":"Acceso a ruta inexistente /img/cajaEdificiosLocos.png con el método GET"}
+{"level":"warn","message":"Acceso a ruta inexistente /img/cajaRobomeke.png con el método GET"}
+{"level":"warn","message":"Acceso a ruta inexistente /img/cajaPanc%C3%BA.png con el método GET"}
+{"level":"warn","message":"Acceso a ruta inexistente /img/cajaRoliwar.png con el método GET"}
+{"level":"warn","message":"Fallo en el login: usuario no encontrado con el username ad@ad"}
+{"level":"warn","message":"Acceso a ruta inexistente /api/randoms con el método GET"}
