@@ -1,5 +1,5 @@
 import { fork } from 'child_process';
-import params from '../config/minimistConfig';
+import params from '../config/minimistConfig.js';
 
 const { PORT, MODE } = params;
 

@@ -3,7 +3,7 @@ import { logger } from '../logs/logger.js';
 import generateProductFaker from '../utils/generateProductFaker.js';
 //ver si se emite un producto al añadir o al obtener producto Faker
 
-export async function getAll() {
+async function getAll() {
     try {
         return await productDB.getAll();
     } catch (err) {
@@ -48,7 +48,7 @@ async function generateProduct(cant) {
     }
 }
 
-export default {
+export {
     getAll,
     addProduct,
     getProductById,

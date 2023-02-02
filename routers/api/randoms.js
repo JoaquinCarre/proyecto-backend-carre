@@ -1,6 +1,6 @@
 //Agregado para el desafío 14:
 import { Router } from 'express';
-import { randomize } from '../../controllers/randomizeController';
+import { randomize } from '../../controllers/randomizeController.js';
 
 const router = Router();
 

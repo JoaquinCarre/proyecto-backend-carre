@@ -10,6 +10,7 @@ import {
 export async function getAllProducts(_, res, next) {
   try {
     const productos = await getAll();
+    console.log('productos: ', productos)
     const data = {
       isEmpty: !productos.length
     };
@@ -20,7 +21,7 @@ export async function getAllProducts(_, res, next) {
   }
 }
 
-export async function addProduct(req, res, next) {
+export async function addNewProduct(req, res, next) {
   try {
     const data = req.body;
     await addProduct(data);
@@ -31,7 +32,7 @@ export async function addProduct(req, res, next) {
   }
 }
 
-export async function getProductById(req, res, next) {
+export async function getProduct(req, res, next) {
   try {
     const { id } = req.params;
     const data = await getProductById(id);
@@ -41,7 +42,7 @@ export async function getProductById(req, res, next) {
   }
 }
 
-export async function deleteProductById(req, res, next) {
+export async function deleteProduct(req, res, next) {
   try {
     const { id } = req.params;
     await deleteProductById(id);

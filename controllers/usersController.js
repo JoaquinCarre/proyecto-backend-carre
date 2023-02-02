@@ -38,7 +38,7 @@ export async function getAllUsers(_, res, next) {
   }
 }
 
-export async function getUser(req, res, next) {
+export async function getOneUser(req, res, next) {
   try {
     const { params: { id } } = req
     const user = await getUser(id)
@@ -66,7 +66,7 @@ export async function updateUser(req, res, next) {
   }
 }
 
-export async function deleteUser(req, res, next) {
+export async function deleteOneUser(req, res, next) {
   try {
     const { params: { id } } = req
     const { deletedCount } = deleteUser(id)

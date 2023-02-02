@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import ProductController from "../controllers/productController.js";
+import { productDB } from "../db/index.js";
 import { logger } from "../logs/logger.js";
 
 function setEvents(server) {
@@ -8,10 +8,10 @@ function setEvents(server) {
     io.on("connection", async (socket) => {
         logger.info(`usuario id "${socket.id}" conectado`);
         //AGREGADO DE PRODUCTOS
-        const dataProducts = await ProductController.get({});
+        const dataProducts = await productDB.get({});
         socket.emit("history-products", dataProducts)
         socket.on("nuevoProducto", async (data) => {
-            ProductController.create(data)
+            productDB.create(data)
             logger.info("Se carga un nuevo producto")
             io.sockets.emit("productosActualizados", data)
         })

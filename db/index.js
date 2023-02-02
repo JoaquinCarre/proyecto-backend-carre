@@ -5,7 +5,11 @@ import UserModel from '../models/user.js';
 import MongoDBContainer from './mongoDB.js';
 import FileContainer from './File.js';
 import path from 'path';
-import { __dirname } from '../app.js';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const pathFile = path.join(__dirname, '/db/messages.json');
 
 const advancedOptions = {
     useNewUrlParser: true,
@@ -14,7 +18,7 @@ const advancedOptions = {
 
 mongoose.connect(config.mongoDB.URI, advancedOptions);
 
-const messageDB = new FileContainer(path.join(__dirname, '/db/messages.json'));
+const messageDB = new FileContainer(pathFile);
 const productDB = new MongoDBContainer(ProductModel);
 const userDB = new MongoDBContainer(UserModel);
 

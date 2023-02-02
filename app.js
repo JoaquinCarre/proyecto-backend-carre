@@ -11,14 +11,12 @@ import { initPassport } from './utils/passport.js';
 import { setEvents } from './utils/socket-io.js';
 import { create } from "express-handlebars";
 import routers from './routers/index.js';
-import fakerRoutes from './routers/products/fakerProducts.js';
 import params from './config/minimistConfig.js';
-import randoms from './routers/api/randoms.js';
 import os from "os";
 import cluster from "cluster";
 
 const __filename = fileURLToPath(import.meta.url);
-export const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(__filename);
 
 const { PORT, MODE } = params;
 
@@ -61,8 +59,6 @@ if (MODE === 'cluster' && cluster.isPrimary) {
   app.set("view engine", "handlebars");
 
   app.use("/", routers);
-  app.use('/api', randoms);
-  app.use("/api/productos-test", fakerRoutes)
 
   app.use(function (err, req, res, next) {
     console.error(err.stack);

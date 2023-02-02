@@ -1,5 +1,5 @@
 import { writeFile, readFile } from 'fs/promises';
-import { logger } from '../logs/logger';
+import { logger } from '../logs/logger.js';
 
 class FileContainer {
     constructor(path) {

@@ -44,7 +44,7 @@ async function deleteUser(id) {
   }
 }
 
-export default {
+export {
   getUser,
   addNewUser,
   getUsers,

@@ -1,4 +1,4 @@
-import { logger } from "../logs/logger";
+import { logger } from "../logs/logger.js";
 
 class MongoDBContainer {
     constructor(collection) {
