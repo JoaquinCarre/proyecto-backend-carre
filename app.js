@@ -11,9 +11,9 @@ import { initPassport } from './utils/passport.js';
 import { setEvents } from './utils/socket-io.js';
 import { create } from "express-handlebars";
 import routers from './routers/index.js';
-import fakerRoutes from './routers/fakerProducts.js';
+import fakerRoutes from './routers/products/fakerProducts.js';
 import params from './config/minimistConfig.js';
-import randoms from './api/randoms.js';
+import randoms from './routers/api/randoms.js';
 import os from "os";
 import cluster from "cluster";
 
