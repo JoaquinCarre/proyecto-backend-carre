@@ -31,7 +31,7 @@ router.post('/sign-out', (req, res, next) => {
       ${err.message}`);
       return next(err)
     }
-    req.session.destroy(error => {
+    req.session.destroy(err => {
       if (!err) {
         res.status(202).end();
       } else {

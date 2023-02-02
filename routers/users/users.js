@@ -20,7 +20,6 @@ function auth (req, res, next) {
 
 const verifyAuth = (req, res, next) => {
   if (req.isAuthenticated()) {
-    const { user } = req.body;
     next()
   } else {
     res.status(401).json({ message: 'Unauthorized to zone private.' })
@@ -98,7 +97,7 @@ router.delete('/:id', async (req, res, next) => {
   } catch (err) {
     logger.error(`${err.message}`);
     next(err)
-  }err
+  }
 })
 
 export default router
