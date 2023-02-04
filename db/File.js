@@ -8,7 +8,6 @@ class FileContainer {
 
     async readFile() {
         try {
-            console.log('pathFile', this.path);
             return JSON.parse(await readFile(this.path, 'utf-8'));
         } catch (err) {
             logger.error('No es posible leer el archivo ', err);
