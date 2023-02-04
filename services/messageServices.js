@@ -1,7 +1,16 @@
-import { normalize } from 'normalizr';
+import { schema, normalize } from 'normalizr';
 import { v4 as uuidv4 } from 'uuid';
 import { messageDB } from "../db/index.js";
-import { messages } from '../models/message.js';
+
+const commentSchema = new schema.Entity('comments');
+const authorSchema = new schema.Entity('authors', {}, { idAttribute: 'email' }
+);
+export const postSchema = new schema.Entity('posts', {
+    messages: [{
+        authors: authorSchema,
+        comments: commentSchema
+    }]
+});
 
 export async function getMessages() {
     return await messageDB.readFile();
@@ -9,7 +18,7 @@ export async function getMessages() {
 
 export async function getMessagesNormalized() {
     const data = await messageDB.readFile();
-    return normalize(data, messages);
+    return normalize(data[0], postSchema);
 }
 
 export async function sendMessage(message) {
@@ -21,7 +30,8 @@ export async function sendMessage(message) {
     };
     data[0].messages.push({
         authors: message.author,
-        text: comment,
+        comments: comment,
     });
+    console.log('Enviando y guardando mensaje');
     await messageDB.writeFile(data);
 }

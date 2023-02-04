@@ -1,3 +1,5 @@
+
+
 const socket = io();
 
 //LOGUEO, CREAR CUENTA O DESLOGUEO DEL USUARIO
@@ -218,7 +220,7 @@ socket.on("history-products", (data) => {
   productTitle.value = "";
   productPrice.value = "";
   productThumbnail.value = "";
-  tableProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [US$]</th><th>Imagen</th></tr>";
+  tableProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [$]</th><th>Imagen</th></tr>";
   data.forEach((prod) => {
     showProducts(prod);
   });
@@ -232,31 +234,63 @@ socket.on("productosActualizados", (data) => {
   showProducts(data);
 })
 
-/* //CENTRO DE MENSAJES - CHAT
+//CENTRO DE MENSAJES - CHAT
 const message = document.getElementById("messages");
 const formChat = document.getElementById("form");
 const emailUser = document.getElementById("email_input");
-const input = document.getElementById("msg_input");
+const nameUser = document.getElementById("name_input");
+const lastnameUser = document.getElementById("lastname_input");
+const ageUser = document.getElementById("age_input");
+const aliasUser = document.getElementById("alias_input");
+const avatarUser = document.getElementById("avatar_input");
+const inputMessage = document.getElementById("msg_input");
+const outputCompression = document.getElementById('compressedMsg');
+/* //Normalizr
+const commentSchema = new normalizr.schema.Entity('comments');
+const authorSchema = new normalizr.schema.Entity('authors', {}, { idAttribute: 'email' }
+);
+const postSchema = new normalizr.schema.Entity('posts', {
+    messages: [{
+        authors: authorSchema,
+        comments: commentSchema
+    }]
+}); 
+
+function denormalizer(data) {
+    const result = normalizr.denormalize(data.result, postSchema, data.entities);
+    return result;
+} */
 
 function showMessage(data) {
-  console.log("showmessage", data)
-  const item = document.createElement("li");
-  item.className = "list-group-item text-start";
-  item.innerHTML =
-    `<strong style="color: blue">${data.messages.authors.email}</strong> <font color="brown">${data.text.date}</font> : <i style="color: green">${data.text.message}</i>`;
-  message.appendChild(item);
+  console.log("showmessage clientSide");
+  outputCompression.value = `${data.outputValue}%`;
+  message.innerHTML = '';
+  data.denormalized.messages.forEach(msg => {
+    const item = document.createElement("li");
+    item.className = "list-group-item text-start";
+    item.innerHTML =
+      `<strong style="color: blue">${msg.authors.email}</strong> <font color="brown">${msg.comments.timestamp}</font> : <i style="color: green">${msg.comments.content}</i>`;
+    message.appendChild(item);
+  })
 }
 
 formChat.addEventListener("submit", function (e) {
   e.preventDefault()
   const data = {
-    email: emailUser.value,
-    message: input.value,
-    date: new Date().toLocaleString()
+    author: {
+      email: emailUser.value,
+      name: nameUser.value,
+      lastname: lastnameUser.value,
+      age: ageUser.value,
+      alias: aliasUser.value,
+      avatar: avatarUser.value
+    },
+    content: inputMessage.value,
+    timestamp: new Date().toLocaleString()
   };
   socket.emit("chat message", data);
-  input.value = "";
-  input.focus();
+  inputMessage.value = "";
+  inputMessage.focus();
 });
 
 socket.on("connect", () => {
@@ -264,15 +298,11 @@ socket.on("connect", () => {
 });
 
 socket.on("history-messages", (data) => {
-  console.log("historymessage", data)
-  message.innerText = "";
-  data.forEach(msg => {
-    console.log("mensaje: ", msg);
-    showMessage(msg);
-  });
+  console.log("historymessage-clientside")
+  showMessage(data);
 });
 
 socket.on("notification", (data) => {
-  console.log("noti", data)
+  console.log("notificacion clientSide");
   showMessage(data);
-}); */
+});

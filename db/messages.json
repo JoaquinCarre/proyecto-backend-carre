@@ -1,0 +1,157 @@
+[
+  {
+    "id": "messages",
+    "messages": [
+      {
+        "authors": {
+          "email": "Servidor@chat",
+          "name": "Servidor",
+          "lastname": "Chat",
+          "age": "0",
+          "alias": "Servidor",
+          "avatar": "https://pbs.twimg.com/profile_images/1231386129254899714/yMTgsgRD_400x400.jpg"
+        },
+        "comments": {
+          "id": "000000",
+          "content": "Bienvenidxs al Chat Público",
+          "timestamp": "14/12/2022, 21:26:58"
+        }
+      },
+      {
+        "authors": {
+          "email": "Carlos7@gmail.com",
+          "name": "Carlos Antonio",
+          "lastname": "Séptimo",
+          "age": "28",
+          "alias": "Car7os",
+          "avatar": "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/8_avatar-512.png"
+        },
+        "comments": {
+          "id": "56138036-6e09-4969-ad81-99abaacad7b7",
+          "content": "Hola gente! Como andan?",
+          "timestamp": "3/2/2023, 21:57:06"
+        }
+      },
+      {
+        "authors": {
+          "email": "Yaki_sieras@hotmail.com",
+          "name": "Yaquelín Ana",
+          "lastname": "Sierra",
+          "age": "32",
+          "alias": "LaYak1",
+          "avatar": "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png"
+        },
+        "comments": {
+          "id": "9754ea47-09be-488c-b5eb-1a5eb1dbb45b",
+          "content": "Holaa! Yo bien! Vos?",
+          "timestamp": "3/2/2023, 22:00:12"
+        }
+      },
+      {
+        "authors": {
+          "email": "Carlos7@gmail.com",
+          "name": "Carlos Antonio",
+          "lastname": "Séptimo",
+          "age": "28",
+          "alias": "Car7os",
+          "avatar": "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/8_avatar-512.png"
+        },
+        "comments": {
+          "id": "fb6baee8-d72e-41ea-a38c-efa90d211c3f",
+          "content": "Bien por suerte! Aunque con mucho calor!",
+          "timestamp": "3/2/2023, 22:10:02"
+        }
+      },
+      {
+        "authors": {
+          "email": "Carlos7@gmail.com",
+          "name": "Carlos Antonio",
+          "lastname": "Séptimo",
+          "age": "28",
+          "alias": "Car7os",
+          "avatar": "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/8_avatar-512.png"
+        },
+        "comments": {
+          "id": "5f4d94bb-a2dc-443b-b528-caa289c8caa4",
+          "content": "Me tocó trabajar al sol y estoy exhausto.",
+          "timestamp": "3/2/2023, 22:12:50"
+        }
+      },
+      {
+        "authors": {
+          "email": "Yaki_sieras@hotmail.com",
+          "name": "Yaquelín Ana",
+          "lastname": "Sierra",
+          "age": "32",
+          "alias": "LaYak1",
+          "avatar": "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png"
+        },
+        "comments": {
+          "id": "8c957f05-c019-4fa5-b89e-182132de5f20",
+          "content": "Uhh que mal, si el calor está insoportable!",
+          "timestamp": "3/2/2023, 22:13:01"
+        }
+      },
+      {
+        "authors": {
+          "email": "elemanoel@gmail.com",
+          "name": "Emanuel",
+          "lastname": "Andrade",
+          "age": "21",
+          "alias": "3mA",
+          "avatar": "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png"
+        },
+        "comments": {
+          "id": "7758895b-26e8-4ce2-ae94-9ad50c55efe8",
+          "content": "Holaaa! Yo por suerte trabajo en oficina, abajo del aire!",
+          "timestamp": "3/2/2023, 22:20:25"
+        }
+      },
+      {
+        "authors": {
+          "email": "elemanoel@gmail.com",
+          "name": "Emanuel",
+          "lastname": "Andrade",
+          "age": "21",
+          "alias": "3mA",
+          "avatar": "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-512.png"
+        },
+        "comments": {
+          "id": "ac1bc8b3-e8eb-4b5d-bc6f-4c69aafd8402",
+          "content": "Naaah chiste jaja. Ni siquiera trabajo!",
+          "timestamp": "3/2/2023, 22:20:58"
+        }
+      },
+      {
+        "authors": {
+          "email": "Yaki_sieras@hotmail.com",
+          "name": "Yaquelín Ana",
+          "lastname": "Sierra",
+          "age": "32",
+          "alias": "LaYak1",
+          "avatar": "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png"
+        },
+        "comments": {
+          "id": "3de367a9-a9d0-4658-8c4f-5bdbee4d0bbf",
+          "content": "Sos terrible Ema! Jaja",
+          "timestamp": "3/2/2023, 22:22:09"
+        }
+      },
+      {
+        "authors": {
+          "email": "Yaki_sieras@hotmail.com",
+          "name": "Yaquelín Ana",
+          "lastname": "Sierra",
+          "age": "32",
+          "alias": "LaYak1",
+          "avatar": "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png"
+        },
+        "comments": {
+          "id": "a50b3717-9f15-4244-bb83-b19e5f0e02e5",
+          "content": "Ya te va a tocar!",
+          "timestamp": "3/2/2023, 22:22:23"
+        }
+      }
+    ]
+  }
+]
