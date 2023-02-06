@@ -1,6 +1,6 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import UserModel from '../models/user.js';
+import UserModel from '../models/schema/user.js';
 import { isValidPassword, encryptPassword } from '../utils/passwordUtils.js'
 import { logger } from "../logs/logger.js";
 

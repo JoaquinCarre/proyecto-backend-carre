@@ -1,28 +1,23 @@
-import { schema, normalize } from 'normalizr';
+import { normalize } from 'normalizr';
 import { v4 as uuidv4 } from 'uuid';
-import { messageDB } from "../db/index.js";
+import MessageRepository from '../models/repository/messageRepository.js';
+import { messageInstance } from '../models/dao/indexDAO.js';
+import { postSchema } from '../models/schema/message.js';
 
-const commentSchema = new schema.Entity('comments');
-const authorSchema = new schema.Entity('authors', {}, { idAttribute: 'email' }
-);
-export const postSchema = new schema.Entity('posts', {
-    messages: [{
-        authors: authorSchema,
-        comments: commentSchema
-    }]
-});
+const repository = new MessageRepository();
 
 export async function getMessages() {
-    return await messageDB.readFile();
+    return await repository.readFile();
 }
 
 export async function getMessagesNormalized() {
-    const data = await messageDB.readFile();
+    const data = await messageInstance.readJSONFile();
+    console.log('data readNormalize: ', data)
     return normalize(data[0], postSchema);
 }
 
 export async function sendMessage(message) {
-    const data = await messageDB.readFile();
+    const data = message;
     const comment = {
         id: uuidv4(),
         content: message.content,
@@ -33,5 +28,5 @@ export async function sendMessage(message) {
         comments: comment,
     });
     console.log('Enviando y guardando mensaje');
-    await messageDB.writeFile(data);
+    await repository.writeFile(data);
 }

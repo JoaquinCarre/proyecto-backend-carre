@@ -1,9 +1,9 @@
 import { Server } from "socket.io";
-import { productDB } from "../db/index.js";
+import { getAll as getAllProducts , addProduct } from "../services/productServices.js";
 import messageAPI from '../controllers/messagesController.js';
 import { logger } from "../logs/logger.js";
 import normalizr from "normalizr";
-import { postSchema } from "../services/messageServices.js";
+import { postSchema } from "../models/schema/message.js";
 
 function setEvents(server) {
     const io = new Server(server);
@@ -12,12 +12,12 @@ function setEvents(server) {
         logger.info(`usuario id "${socket.id}" conectado`);
 
         //AGREGADO DE PRODUCTOS
-        const dataProducts = await productDB.getAll();
-        socket.emit("history-products", dataProducts)
+        const dataProducts = await getAllProducts();
+        socket.emit("history-products", dataProducts);
         socket.on("nuevoProducto", async (data) => {
-            productDB.create(data)
-            logger.info("Se carga un nuevo producto")
-            io.sockets.emit("productosActualizados", data)
+            addProduct(data);
+            logger.info("Se carga un nuevo producto");
+            io.sockets.emit("productosActualizados", data);
         })
 
         //CENTRO DE MENSAJES - CHAT

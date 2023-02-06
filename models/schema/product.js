@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import config from '../config/mongoDBConfig.js';
+import config from '../../config/mongoDBConfig.js';
 
 const advancedOptions = {
     useNewUrlParser: true,

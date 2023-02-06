@@ -1,12 +1,12 @@
 import { writeFile, readFile } from 'fs/promises';
-import { logger } from '../logs/logger.js';
+import { logger } from '../../../logs/logger.js';
 
 class FileContainer {
     constructor(path) {
         this.path = path;
     }
 
-    async readFile() {
+    async readJSONFile() {
         try {
             return JSON.parse(await readFile(this.path, 'utf-8'));
         } catch (err) {
@@ -14,10 +14,10 @@ class FileContainer {
         }
     }
 
-    async writeFile(data) {
+    async writeJSONFile(data) {
         try {
             await writeFile(this.path, JSON.stringify(data, null, 2));
-        } catch (error) {
+        } catch (err) {
             logger.error('No es posible sobreescribir el archivo ', err);
         }
     }

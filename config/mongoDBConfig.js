@@ -1,4 +1,3 @@
-//Agregado para el desafío 14: uso de dotenv
 import 'dotenv/config.js';
 
 export default {

@@ -1,11 +1,12 @@
-import { productDB } from '../db/index.js';
+import ProductRepository from '../models/repository/productRepository.js';
 import { logger } from '../logs/logger.js';
 import generateProductFaker from '../utils/generateProductFaker.js';
-//ver si se emite un producto al añadir o al obtener producto Faker
+
+const repository = new ProductRepository();
 
 async function getAll() {
     try {
-        return await productDB.getAll();
+        return await repository.getAll();
     } catch (err) {
         logger.error('No es posible obtener los productos de la base de datos ', err)
     }
@@ -13,7 +14,7 @@ async function getAll() {
 
 async function addProduct(product) {
     try {
-        await productDB.create(product);
+        await repository.create(product);
     } catch (err) {
         logger.error('No es posible crear la base de datos para los productos ', err)
     }
@@ -21,7 +22,7 @@ async function addProduct(product) {
 
 async function getProductById(id) {
     try {
-        return await productDB.getByid(id);
+        return await repository.getByid(id);
     } catch (err) {
         logger.error('No es posible obtener el producto ', err);
     }
@@ -29,7 +30,7 @@ async function getProductById(id) {
 
 async function deleteProductById(id) {
     try {
-        await productDB.deleteById(id);
+        await repository.delete(id);
     } catch (err) {
         logger.error('No es posible borrar el producto ', err);
     }
