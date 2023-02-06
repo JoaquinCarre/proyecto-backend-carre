@@ -22,7 +22,7 @@ async function addProduct(product) {
 
 async function getProductById(id) {
     try {
-        return await repository.getByid(id);
+        return await repository.getProdByid(id);
     } catch (err) {
         logger.error('No es posible obtener el producto ', err);
     }

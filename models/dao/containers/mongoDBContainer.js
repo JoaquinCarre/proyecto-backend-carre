@@ -15,7 +15,6 @@ class MongoDBContainer {
   
     async getAll() {
       try {
-        console.log('colección para cambiar nombre elemento', this.collection)
         return await this.collection.find({});
       } catch (err) {
         logger.error('No es posible obtener la información de la base de datos ', err);

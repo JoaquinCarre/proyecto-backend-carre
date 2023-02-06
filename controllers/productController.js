@@ -10,7 +10,6 @@ import {
 export async function getAllProducts(_, res, next) {
   try {
     const productos = await getAll();
-    console.log('productos: ', productos)
     const data = {
       isEmpty: !productos.length
     };
@@ -34,10 +33,14 @@ export async function addNewProduct(req, res, next) {
 
 export async function getProduct(req, res, next) {
   try {
-    const { id } = req.params;
-    const data = await getProductById(id);
-    res.json(data);
+    const { params: { id } } = req
+    const product = await getProductById(id);
+    if (!product) {
+      return res.status(404).end()
+    }
+    res.json(product);
   } catch (err) {
+    logger.error(err.message);
     next(err);
   }
 }
@@ -48,6 +51,7 @@ export async function deleteProduct(req, res, next) {
     await deleteProductById(id);
     res.redirect('/');
   } catch (err) {
+    logger.error(err.message);
     next(err);
   }
 }
@@ -69,10 +73,7 @@ export async function generateProductFaker(req, res, next) {
           quantity = 5;
         }
       }
-    } else {
-      console.log(`Generando 1 producto aleatorio`);
-      quantity = 1;
-    }
+    } 
     const data = await generateProduct(quantity);
     res.json(data);
   } catch (err) {

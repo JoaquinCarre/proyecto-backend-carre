@@ -78,7 +78,6 @@ selectSignUpButton.addEventListener('click', async () => {
 })
 
 formAuth.addEventListener('submit', async (event) => {
-  console.log('event', event)
   event.preventDefault();
   const data = {
     email: emailSign.value,
@@ -230,7 +229,6 @@ socket.on("productosActualizados", (data) => {
   productTitle.value = "";
   productPrice.value = "";
   productThumbnail.value = "";
-  console.log("update", data)
   showProducts(data);
 })
 
@@ -262,7 +260,6 @@ function denormalizer(data) {
 } */
 
 function showMessage(data) {
-  console.log("showmessage clientSide");
   outputCompression.value = `${data.outputValue}%`;
   message.innerHTML = '';
   data.denormalized.messages.forEach(msg => {
@@ -298,11 +295,9 @@ socket.on("connect", () => {
 });
 
 socket.on("history-messages", (data) => {
-  console.log("historymessage-clientside")
   showMessage(data);
 });
 
 socket.on("notification", (data) => {
-  console.log("notificacion clientSide");
   showMessage(data);
 });

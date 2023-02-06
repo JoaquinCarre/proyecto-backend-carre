@@ -15,7 +15,7 @@ export default class MessageDAO extends FileContainer {
 
     async addMessage(data) {
         const fileData = await this.readJSONFile();
-        fileData.messages.push(data);
+        fileData[0].messages.push(data);
         await this.writeJSONFile(fileData);
     }
 

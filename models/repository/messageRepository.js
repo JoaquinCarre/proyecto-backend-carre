@@ -8,11 +8,9 @@ export default class MessageRepository {
 
   async readFile() {
     const data = await this.dao.readJSONFile();
-    console.log('data: ', data)
     const dataDTO = data[0].messages.map((m) => {
       return new MessageDTO(m.authors.email, m.comments.content);
     });
-    console.log('dataDTO: ', dataDTO);
     return dataDTO;
   }
 

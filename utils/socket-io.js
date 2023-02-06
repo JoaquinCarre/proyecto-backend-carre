@@ -25,12 +25,9 @@ function setEvents(server) {
         let normalizedSize = JSON.stringify(messages).length;
         const denormalized = normalizr.denormalize(messages.result, postSchema, messages.entities);
         let denormalizedSize = JSON.stringify(denormalized).length;
-        console.log('desglose data: ', normalizedSize, '/', denormalizedSize)
         const outputValue = ((1 - normalizedSize / denormalizedSize) * 100).toFixed(2);
-        console.log('mensajes socket-io', denormalized, '/', outputValue);
         socket.emit("history-messages", { denormalized, outputValue });
         socket.on("chat message", async (data) => {
-            console.log('devuelve chat message: ', data)
             await messageAPI.sendNewMessage(data);
             const messagesNormalized = await messageAPI.readAllMessagesNormalized();
             let normalizedSize = JSON.stringify(messagesNormalized).length;

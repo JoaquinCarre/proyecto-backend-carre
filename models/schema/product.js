@@ -1,13 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
-import config from '../../config/mongoDBConfig.js';
-
-const advancedOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}
-
-//para conectar a mongoDB
-mongoose.connect(config.mongoDB.URI, advancedOptions);
+import mongoose, { Schema } from 'mongoose';    
 
 const product = new Schema({
     title: { type: String, required: true },
