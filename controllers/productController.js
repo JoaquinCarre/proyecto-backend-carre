@@ -66,16 +66,19 @@ export async function generateProductFaker(req, res, next) {
         return
       } else {
         if (q <= 5) {
-          console.log(`Generando ${cant} producto/s aleatorio/s`);
+          console.log(`Generando ${q} producto/s aleatorio/s`);
           quantity = q; 
         } else {
           console.log(`Generando 5 productos aleatorios`);
           quantity = 5;
         }
       }
-    } 
+    } else {
+      console.log(`Generando 1 producto aleatorio`);
+      quantity = 1;
+    }
     const data = await generateProduct(quantity);
-    res.json(data);
+    res.status(201).json(data);
   } catch (err) {
     logger.error(err.message);
     next(err);

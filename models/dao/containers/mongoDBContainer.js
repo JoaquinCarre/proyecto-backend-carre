@@ -21,7 +21,7 @@ class MongoDBContainer {
       }
     }
   
-    async getByid(id) {
+    async getOneByid(id) {
       try {
         return await this.collection.findById(id);
       } catch (err) {

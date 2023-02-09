@@ -17,9 +17,7 @@ export default class ProductRepository {
   }
 
   async getProdByid(id) {
-    console.log('this.dao: ', this.dao);
-    console.log('this.dao si me lo instancia pero no se porqué no me deja acceder al método getById');
-    const data = await this.dao.getById(id);
+    const data = await this.dao.getOneByid(id);
     if (data) {
       return new ProductDTO(data);
     } else {

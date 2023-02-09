@@ -11,8 +11,8 @@ const router = Router();
 
 router.get('/', getAllProducts);
 router.post('/', addNewProduct)
+router.get('/productos-test', generateProductFaker)
 router.get('/:id', getProduct)
 router.delete('/:id', deleteProduct)
-router.get('/productos-test', generateProductFaker)
 
 export default router;
