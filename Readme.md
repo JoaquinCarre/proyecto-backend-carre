@@ -1,6 +1,6 @@
 # Desafío 21 - Testeo de funcionalidades de la API REST
 
-En este desafío se realiza el testeo de funcionalidades y así testear las peticiones GET, POST, PUT y DELETE al servidor. Para realizar los test se instalan previamente las dependecias axios, mocha, chai, supertest y sinon.
+En este desafío se realiza el testeo de funcionalidades y así testear las peticiones GET, POST, PUT y DELETE al servidor. Para realizar los test se instalan previamente las dependecias axios, mocha, chai, supertest y 
 
 ## Configuración
 
