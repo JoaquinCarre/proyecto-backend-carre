@@ -3,6 +3,7 @@ import {
   getAll,
   addProduct,
   getProductById,
+  updateProductById,
   deleteProductById,
   generateProduct
 } from '../services/productServices.js';
@@ -10,10 +11,10 @@ import {
 export async function getAllProducts(_, res, next) {
   try {
     const productos = await getAll();
-    const data = {
+    /* const data = {
       isEmpty: !productos.length
-    };
-    res.render('index', data);
+    }; */
+    res.status(200).json(productos);
   } catch (err) {
     logger.error(err.message);
     next(err);
@@ -23,8 +24,8 @@ export async function getAllProducts(_, res, next) {
 export async function addNewProduct(req, res, next) {
   try {
     const data = req.body;
-    await addProduct(data);
-    res.redirect('/');
+    const response = await addProduct(data);
+    res.status(201).json(response);
   } catch (err) {
     logger.error(err.message);
     next(err);
@@ -38,7 +39,19 @@ export async function getProduct(req, res, next) {
     if (!product) {
       return res.status(404).end()
     }
-    res.json(product);
+    res.status(200).json(product);
+  } catch (err) {
+    logger.error(err.message);
+    next(err);
+  }
+}
+
+export async function updateProduct(req, res, next) {
+  try {
+    let id = req.params.id;
+    let data = req.body;
+    const product = await updateProductById(id, data);
+    res.status(201).json(product);
   } catch (err) {
     logger.error(err.message);
     next(err);
@@ -48,8 +61,8 @@ export async function getProduct(req, res, next) {
 export async function deleteProduct(req, res, next) {
   try {
     const { id } = req.params;
-    await deleteProductById(id);
-    res.redirect('/');
+    const response = await deleteProductById(id);
+    res.status(200).json(response);
   } catch (err) {
     logger.error(err.message);
     next(err);
@@ -73,9 +86,12 @@ export async function generateProductFaker(req, res, next) {
           quantity = 5;
         }
       }
-    } 
+    } else {
+      console.log(`Generando 1 producto aleatorio`);
+      quantity = 1;
+    }
     const data = await generateProduct(quantity);
-    res.json(data);
+    res.status(201).json(data);
   } catch (err) {
     logger.error(err.message);
     next(err);

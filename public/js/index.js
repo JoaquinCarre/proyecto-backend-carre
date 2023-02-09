@@ -204,7 +204,7 @@ formProducts.addEventListener("submit", async function (e) {
       "price": price,
       "thumbnail": thumbnail
     })
-    await fetch("http://localhost:8080/", {
+    await fetch("http://localhost:8080/products/", {
       headers: {
         'Content-Type': 'application/json'
       },
@@ -243,21 +243,6 @@ const aliasUser = document.getElementById("alias_input");
 const avatarUser = document.getElementById("avatar_input");
 const inputMessage = document.getElementById("msg_input");
 const outputCompression = document.getElementById('compressedMsg');
-/* //Normalizr
-const commentSchema = new normalizr.schema.Entity('comments');
-const authorSchema = new normalizr.schema.Entity('authors', {}, { idAttribute: 'email' }
-);
-const postSchema = new normalizr.schema.Entity('posts', {
-    messages: [{
-        authors: authorSchema,
-        comments: commentSchema
-    }]
-}); 
-
-function denormalizer(data) {
-    const result = normalizr.denormalize(data.result, postSchema, data.entities);
-    return result;
-} */
 
 function showMessage(data) {
   outputCompression.value = `${data.outputValue}%`;

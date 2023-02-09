@@ -1,4 +1,13 @@
 import { logger } from "../../../logs/logger.js";
+import mongoose from 'mongoose';
+import config from '../../../config/mongoDBConfig.js';
+
+const advancedOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}
+
+mongoose.connect(config.mongoDB.URI, advancedOptions);
 
 class MongoDBContainer {
     constructor(collection) {
@@ -21,7 +30,7 @@ class MongoDBContainer {
       }
     }
   
-    async getByid(id) {
+    async getOneById(id) {
       try {
         return await this.collection.findById(id);
       } catch (err) {

@@ -3,6 +3,7 @@ import {
     getAllProducts,
     addNewProduct,
     getProduct,
+    updateProduct,
     deleteProduct,
     generateProductFaker
 } from '../../controllers/productController.js';
@@ -10,9 +11,10 @@ import {
 const router = Router();
 
 router.get('/', getAllProducts);
-router.post('/', addNewProduct)
-router.get('/:id', getProduct)
-router.delete('/:id', deleteProduct)
-router.get('/productos-test', generateProductFaker)
+router.post('/', addNewProduct);
+router.get('/productos-test', generateProductFaker);
+router.get('/:id', getProduct);
+router.put('/:id', updateProduct);
+router.delete('/:id', deleteProduct);
 
 export default router;

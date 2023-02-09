@@ -6,6 +6,7 @@ let productInstance = null;
 export default class ProductDAO extends MongoDBContainer {
     constructor(model) {
         super(model);
+        this.model = model;
     }
 
     static getInstance() {

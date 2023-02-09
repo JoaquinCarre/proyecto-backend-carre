@@ -3,7 +3,7 @@ import { logger } from "../logs/logger.js";
 
 async function getUser(id) {
   try {
-    return await userInstance.getByid(id);
+    return await userInstance.getOneById(id);
   } catch (err) {
     logger.error("No es posible obtener el usuario ", err);
   }
