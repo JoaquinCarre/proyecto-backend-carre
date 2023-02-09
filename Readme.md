@@ -1,6 +1,6 @@
-# Desafío 20 - Mejorar la Arquitectura de la API
+# Desafío 21 - Testeo de funcionalidades de la API REST
 
-En este desafío se profundiza sobre la capa de persistencia, agregando los conceptos de DAO y DTO. A su vez, cada uno de los casos de persistencia se implementan usando el patrón 'singleton'. Por último, se implementa el patrón 'repository' para la persistencia de productos y mensajes.
+En este desafío se realiza el testeo de funcionalidades y así testear las peticiones GET, POST, PUT y DELETE al servidor. Para realizar los test se instalan previamente las dependecias axios, mocha, chai, supertest y sinon.
 
 ## Configuración
 
@@ -11,3 +11,16 @@ ENV=local
 MONGO_PASS=c8ng0KHkvS7xqhCB
 ```
 
+## Ejecución
+
+Para ejecutar el testeo llevado a cabo en el desafìo se deben escribir los siguientes comandos en la terminal:
+
+```
+npm run test-axios
+```
+
+y
+
+```
+npm run test-mocha
+```
