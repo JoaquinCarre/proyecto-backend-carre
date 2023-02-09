@@ -1,16 +1,9 @@
 import { logger } from '../logs/logger.js';
-import {
-  getAll,
-  addProduct,
-  getProductById,
-  updateProductById,
-  deleteProductById,
-  generateProduct
-} from '../services/productServices.js';
+import productServices from '../services/productServices.js';
 
 export async function getAllProducts(_, res, next) {
   try {
-    const productos = await getAll();
+    const productos = await productServices.getAll();
     /* const data = {
       isEmpty: !productos.length
     }; */
@@ -24,7 +17,7 @@ export async function getAllProducts(_, res, next) {
 export async function addNewProduct(req, res, next) {
   try {
     const data = req.body;
-    const response = await addProduct(data);
+    const response = await productServices.addProduct(data);
     res.status(201).json(response);
   } catch (err) {
     logger.error(err.message);
@@ -35,7 +28,7 @@ export async function addNewProduct(req, res, next) {
 export async function getProduct(req, res, next) {
   try {
     const { params: { id } } = req
-    const product = await getProductById(id);
+    const product = await productServices.getProductById(id);
     if (!product) {
       return res.status(404).end()
     }
@@ -50,7 +43,7 @@ export async function updateProduct(req, res, next) {
   try {
     let id = req.params.id;
     let data = req.body;
-    const product = await updateProductById(id, data);
+    const product = await productServices.updateProductById(id, data);
     res.status(201).json(product);
   } catch (err) {
     logger.error(err.message);
@@ -61,7 +54,7 @@ export async function updateProduct(req, res, next) {
 export async function deleteProduct(req, res, next) {
   try {
     const { id } = req.params;
-    const response = await deleteProductById(id);
+    const response = await productServices.deleteProductById(id);
     res.status(200).json(response);
   } catch (err) {
     logger.error(err.message);
@@ -79,7 +72,7 @@ export async function generateProductFaker(req, res, next) {
         return
       } else {
         if (q <= 5) {
-          console.log(`Generando ${cant} producto/s aleatorio/s`);
+          console.log(`Generando ${q} producto/s aleatorio/s`);
           quantity = q; 
         } else {
           console.log(`Generando 5 productos aleatorios`);
@@ -90,7 +83,7 @@ export async function generateProductFaker(req, res, next) {
       console.log(`Generando 1 producto aleatorio`);
       quantity = 1;
     }
-    const data = await generateProduct(quantity);
+    const data = await productServices.generateProduct(quantity);
     res.status(201).json(data);
   } catch (err) {
     logger.error(err.message);

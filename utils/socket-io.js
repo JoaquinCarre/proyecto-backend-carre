@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { getAll as getAllProducts , addProduct } from "../services/productServices.js";
+import productServices from "../services/productServices.js";
 import messageAPI from '../controllers/messagesController.js';
 import { logger } from "../logs/logger.js";
 import normalizr from "normalizr";
@@ -12,10 +12,10 @@ function setEvents(server) {
         logger.info(`usuario id "${socket.id}" conectado`);
 
         //AGREGADO DE PRODUCTOS
-        const dataProducts = await getAllProducts();
+        const dataProducts = await productServices.getAll();
         socket.emit("history-products", dataProducts);
         socket.on("nuevoProducto", async (data) => {
-            addProduct(data);
+            productServices.addProduct(data);
             logger.info("Se carga un nuevo producto");
             io.sockets.emit("productosActualizados", data);
         })

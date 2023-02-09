@@ -50,14 +50,13 @@ async function generateProduct(cant) {
     for (let i = 0; i < cant; i++) {
       products.push(await generateOneProductFaker());
     }
-    console.log('productos generados: ', products);
     return products;
   } catch (err) {
     logger.error("No es posible obtener productos Faker de la base de datos ", err);
   }
 }
 
-export {
+export default {
   getAll,
   addProduct,
   getProductById,
