@@ -1,6 +1,8 @@
 # Desafío 22 - GraphQL
 
-En este desafío se realiza el testeo de funcionalidades y así testear las peticiones GET, POST, PUT y DELETE al servidor. Para realizar los test se instalan previamente las dependecias axios, mocha, chai, supertest y 
+En este desafío se trabaja con GraphQL, un lenguaje de consulta y un tiempo de ejecución del servidor para las interfaces de programación de aplicaciones (API). Su función es brindar a los clientes exactamente los datos que solicitan y nada más.
+
+Para el presente entregable, se realizará una consulta a la base de datos de productos.
 
 ## Configuración
 
