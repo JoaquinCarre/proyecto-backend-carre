@@ -42,6 +42,7 @@ class MongoDBContainer {
       try {
         return await this.collection.updateOne({ _id: id }, { $set: data });
       } catch (err) {
+        console.log('error');
         logger.error('No es posible actualizar el elemento en la base de datos ', err);
       }
     }

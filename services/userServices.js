@@ -1,7 +1,7 @@
 import { userInstance } from "../models/dao/indexDAO.js";
 import { logger } from "../logs/logger.js";
 
-async function getUser(id) {
+export async function getUser(id) {
   try {
     return await userInstance.getOneById(id);
   } catch (err) {
@@ -9,7 +9,7 @@ async function getUser(id) {
   }
 }
 
-async function addNewUser(user) {
+export async function addNewUser(user) {
   try {
     await userInstance.create(user);
   } catch (err) {
@@ -17,7 +17,7 @@ async function addNewUser(user) {
   }
 }
 
-async function getUsers() {
+export async function getUsers() {
   try {
     return await userInstance.getAll();
   } catch (err) {
@@ -28,7 +28,7 @@ async function getUsers() {
   }
 }
 
-async function uploadUser(id, data) {
+export async function uploadUser(id, data) {
   try {
     await userInstance.updateById(id, data);
   } catch (err) {
@@ -36,18 +36,10 @@ async function uploadUser(id, data) {
   }
 }
 
-async function deleteUser(id) {
+export async function deleteUser(id) {
   try {
     await userInstance.deleteById(id);
   } catch (err) {
     logger.error("No es posible borra el usuario ", err);
   }
 }
-
-export {
-  getUser,
-  addNewUser,
-  getUsers,
-  uploadUser,
-  deleteUser
-};

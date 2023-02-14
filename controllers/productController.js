@@ -4,9 +4,6 @@ import productServices from '../services/productServices.js';
 export async function getAllProducts(_, res, next) {
   try {
     const productos = await productServices.getAll();
-    /* const data = {
-      isEmpty: !productos.length
-    }; */
     res.status(200).json(productos);
   } catch (err) {
     logger.error(err.message);

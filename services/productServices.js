@@ -7,40 +7,40 @@ const repository = new ProductRepository();
 async function getAll() {
   try {
     return await repository.getAll();
-  } catch (err) {
-    logger.error("No es posible obtener los productos de la base de datos ", err);
+  } catch {
+    throw new Error
   }
 }
 
 async function addProduct(product) {
   try {
     return await repository.create(product);
-  } catch (err) {
-    logger.error("No es posible crear la base de datos para los productos ", err);
+  } catch {
+    throw new Error
   }
 }
 
 async function getProductById(id) {
   try {
     return await repository.getProdByid(id);
-  } catch (err) {
-    logger.error("No es posible obtener el producto ", err);
+  } catch {
+    throw new Error
   }
 }
 
 async function updateProductById(id, data) {
   try {
     return await repository.update(id, data);
-  } catch (err) {
-    logger.error("No es posible borrar el producto ", err);
+  } catch {
+    throw new Error
   }
 }
 
 async function deleteProductById(id) {
   try {
     return await repository.delete(id);
-  } catch (err) {
-    logger.error("No es posible borrar el producto ", err);
+  } catch {
+    throw new Error
   }
 }
 
@@ -51,8 +51,8 @@ async function generateProduct(cant) {
       products.push(await generateOneProductFaker());
     }
     return products;
-  } catch (err) {
-    logger.error("No es posible obtener productos Faker de la base de datos ", err);
+  } catch {
+    throw new Error
   }
 }
 

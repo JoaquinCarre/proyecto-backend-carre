@@ -4,20 +4,20 @@ import {
     sendMessage
 } from '../services/messageServices.js';
 
-async function readAllMessages() {
+export async function readAllMessages() {
     return getMessages();
 }
 
-async function readAllMessagesNormalized() {
+export async function readAllMessagesNormalized() {
     return getMessagesNormalized();
 }
 
-async function sendNewMessage(message) {
+export async function sendNewMessage(message) {
     return sendMessage(message);
 }
-
+/* 
 export default {
     readAllMessages,
     readAllMessagesNormalized,
     sendNewMessage
-}
+} */

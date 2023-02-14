@@ -1,0 +1,53 @@
+GET ALL PRODUCT:
+query {
+  getAllFunc {
+    title
+    price
+    thumbnail
+  }
+}
+
+GET ALL PRODUCTS WITH ID:
+query {
+  getAllFunc {
+    id
+    title
+    price
+    thumbnail
+  }
+}
+
+CREATE PRODUCT:
+mutation {
+   addProductFunc (body: {
+     title: "OVNI",
+     price: 111,
+     thumbnail: "https://ovnis.com"
+   }) {
+     id
+     title
+     price
+     thumbnail
+   }
+ }
+
+GET PRODUCT BY ID:
+query {
+  getProductByIdFunc (id: "") {
+    title
+    price
+    thumbnail
+  }
+}
+
+UPDATE PRODUCT BY ID:
+mutation {
+   updateProductByIdFunc (id: "", body: {
+     price: 999
+   })
+}
+
+DELETE PRODUCT BY ID:
+mutation {
+   deleteProductByIdFunc (id: "")
+}
