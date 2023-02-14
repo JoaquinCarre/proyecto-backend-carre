@@ -270,6 +270,7 @@ formChat.addEventListener("submit", function (e) {
     content: inputMessage.value,
     timestamp: new Date().toLocaleString()
   };
+  console.log('data:', data)
   socket.emit("chat message", data);
   inputMessage.value = "";
   inputMessage.focus();

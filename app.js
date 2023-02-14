@@ -12,7 +12,7 @@ import routers from './routers/index.js';
 import params from './config/minimistConfig.js';
 import os from "os";
 import cluster from "cluster";
-import { graphqlProducts, graphqlUsers, graphqlMessages } from './graphql/graphql.js';
+import { graphqlProducts/*,  graphqlUsers, graphqlMessages */ } from './graphql/graphql.js';
 
 const app = express();
 
@@ -57,8 +57,8 @@ if (MODE === 'cluster' && cluster.isPrimary) {
 
   app.use("/", routers);
   app.use('/graphql/products', graphqlProducts);
-  app.use('/graphql/users', graphqlUsers);
-  app.use('/graphql/messages', graphqlMessages);
+/*   app.use('/graphql/users', graphqlUsers);
+  app.use('/graphql/messages', graphqlMessages); */
 
   app.use(function (err, req, res, next) {
     console.error(err.stack);

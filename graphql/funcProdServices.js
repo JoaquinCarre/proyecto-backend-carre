@@ -13,7 +13,6 @@ export async function getProductByIdFunc(id) {
 }
 
 export async function updateProductByIdFunc(id, data) {
-    console.log('data: ', data);
     return productServices.updateProductById(id.id, data);
 }
 

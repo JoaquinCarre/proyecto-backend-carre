@@ -1,8 +1,8 @@
 import { buildSchema } from "graphql";
 import { graphqlHTTP } from "express-graphql";
 import { addProductFunc, getAllFunc, getProductByIdFunc, updateProductByIdFunc, deleteProductByIdFunc, generateProductFunc } from "./funcProdServices.js";
-import { registerUser, getAllUsers, getOneUser } from "../controllers/usersController.js";
-import { readAllMessagesNormalized, sendNewMessage } from "../controllers/messagesController.js";
+/* import { registerUser, getAllUsers, getOneUser } from "../controllers/usersController.js";
+import { readAllMessagesNormalized, sendNewMessage } from "../controllers/messagesController.js"; */
 
 
 /* type Message {
@@ -29,7 +29,26 @@ type ProductDTO {
     price: Float
     thumbnail: String
 }
-type User {
+
+input ProductInput{
+    title: String
+    price: Float
+    thumbnail: String
+}
+
+type Query {
+    getAllFunc: [ProductDTO]
+    getProductByIdFunc(id: ID!): ProductDTO
+    generateProductFunc: [ProductDTO]
+}
+type Mutation {
+    addProductFunc(body: ProductInput!): Product
+    updateProductByIdFunc(id: ID!, body: ProductInput!): Int
+    deleteProductByIdFunc(id: ID!): Int
+}
+`)
+
+/* type User {
     id: ID!
     email: String
     password: String
@@ -41,11 +60,6 @@ type UserDTO {
 type MessageDTO {
     email: String
     content: String
-}
-input ProductInput{
-    title: String
-    price: Float
-    thumbnail: String
 }
 input UserInput{
     email: String
@@ -63,7 +77,8 @@ input author {
     age: String
     alias: String
     avatar: String
-}
+} 
+
 type Query {
     getAllFunc: [ProductDTO]
     getProductByIdFunc(id: ID!): ProductDTO
@@ -79,7 +94,7 @@ type Mutation {
     registerUser(body: UserInput): UserDTO
     sendNewMessage(body: MessageInput): MessageDTO
 }
-`)
+`)*/
 
 export const graphqlProducts = graphqlHTTP({
     schema,
@@ -94,7 +109,7 @@ export const graphqlProducts = graphqlHTTP({
     graphiql: true,
 })
 
-export const graphqlUsers = graphqlHTTP({
+/* export const graphqlUsers = graphqlHTTP({
     schema,
     rootValue: {
         registerUser,
@@ -111,4 +126,4 @@ export const graphqlMessages = graphqlHTTP({
         sendNewMessage,
     },
     graphiql: true,
-})
+}) */

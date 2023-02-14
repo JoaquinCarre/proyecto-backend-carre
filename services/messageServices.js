@@ -12,7 +12,6 @@ export async function getMessages() {
 
 export async function getMessagesNormalized() {
     const data = await messageInstance.readJSONFile();
-    console.log('data: ', data[0])
     return normalize(data[0], postSchema);
 }
 
