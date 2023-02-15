@@ -1,6 +1,6 @@
 # Desafío 23 - Reformar proyecto para usar con otro framework
 
-En base al desafío 21, se utiliza el framework NestJS <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="50" alt="Nest Logo" /></a> para trasladar el proyecto.
+En base al desafío 21, se utiliza el framework <strong style="color: red">NestJS</strong> <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="10" alt="Nest Logo" /></a> para trasladar el proyecto.
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
