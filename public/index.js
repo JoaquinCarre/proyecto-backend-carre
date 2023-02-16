@@ -26,6 +26,7 @@ const passSign = document.getElementById('password');
 
 
 window.addEventListener('load', async () => {
+
   const userLog = await fetch("http://localhost:3000/users/me");
   if (userLog.status === 200) {
     const user = await userLog.json();
@@ -178,52 +179,21 @@ const productTitle = document.getElementById('name_product');
 const productPrice = document.getElementById('price_product');
 const productThumbnail = document.getElementById('url_product');
 
-/* function showProducts(data) {
-  const item = document.createElement("tr")
-  item.innerHTML =
-    `<td>${data.title}</td>
+async function showProducts() {
+  const productsJSON = await fetch("http://localhost:3000/products/")
+  const products = await productsJSON.json();
+  console.log('productos', products);
+  tableProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [$]</th><th>Imagen</th></tr>";
+  products.forEach((data) => {
+    const item = document.createElement("tr")
+    item.innerHTML =
+      `<td>${data.title}</td>
     <td>${data.price}</td>
     <td>
       <img src=${data.thumbnail} alt="imagen ${data.title}" width="50px" />
     </td>`;
-  tableProducts.appendChild(item);
+    tableProducts.appendChild(item);
+  });
 }
 
-formProducts.addEventListener("submit", async function (e) {
-  e.preventDefault()
-  const title = productTitle.value;
-  const price = productPrice.value;
-  const thumbnail = productThumbnail.value;
-  if (title !== '' && price !== '' && thumbnail !== '') {
-    socket.emit('nuevoProducto', {
-      "title": title,
-      "price": price,
-      "thumbnail": thumbnail
-    })
-    await fetch("http://localhost:3000/products/", {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: 'POST',
-    });
-  } else {
-    alert('Completar los campos vacíos')
-  }
-});
-
-socket.on("history-products", (data) => {
-  productTitle.value = "";
-  productPrice.value = "";
-  productThumbnail.value = "";
-  tableProducts.innerHTML = "<tr><th>Nombre</th><th>Precio [$]</th><th>Imagen</th></tr>";
-  data.forEach((prod) => {
-    showProducts(prod);
-  });
-});
-
-socket.on("productosActualizados", (data) => {
-  productTitle.value = "";
-  productPrice.value = "";
-  productThumbnail.value = "";
-  showProducts(data);
-}) */
+showProducts();
