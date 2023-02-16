@@ -1,7 +1,3 @@
-
-
-const socket = io();
-
 //LOGUEO, CREAR CUENTA O DESLOGUEO DEL USUARIO
 const outAccount = document.getElementById('out-account');
 const selectSignInButton = document.getElementById('signin-nav');
@@ -30,7 +26,7 @@ const passSign = document.getElementById('password');
 
 
 window.addEventListener('load', async () => {
-  const userLog = await fetch("http://localhost:8080/users/me");
+  const userLog = await fetch("http://localhost:3000/users/me");
   if (userLog.status === 200) {
     const user = await userLog.json();
     noAccountDiv.classList.add('d-none');
@@ -88,7 +84,7 @@ formAuth.addEventListener('submit', async (event) => {
   let responseFetch;
 
   if (event.submitter.id === 'signin-button') {
-    responseFetch = await fetch("http://localhost:8080/auth/sign-in", {
+    responseFetch = await fetch("http://localhost:3000/auth/sign-in", {
       headers: {
         'Content-Type': 'application/json',
         'Content-Length': dataJSON.length
@@ -116,7 +112,7 @@ formAuth.addEventListener('submit', async (event) => {
   }
 
   else if (event.submitter.id === 'signup-button') {
-    responseFetch = await fetch("http://localhost:8080/auth/sign-up", {
+    responseFetch = await fetch("http://localhost:3000/auth/sign-up", {
       headers: {
         'Content-Type': 'application/json',
         'Content-Length': dataJSON.length
@@ -160,7 +156,7 @@ goBackButton.addEventListener('click', () => {
 
 SignOutButton.addEventListener('click', async () => {
   formAdd.classList.add('d-none');
-  const userOut = await fetch("http://localhost:8080/auth/sign-out", {
+  const userOut = await fetch("http://localhost:3000/auth/sign-out", {
     headers: {
       'Content-Type': 'application/json'
     },
@@ -204,7 +200,7 @@ formProducts.addEventListener("submit", async function (e) {
       "price": price,
       "thumbnail": thumbnail
     })
-    await fetch("http://localhost:8080/products/", {
+    await fetch("http://localhost:3000/products/", {
       headers: {
         'Content-Type': 'application/json'
       },
